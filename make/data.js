@@ -170,6 +170,27 @@
     });
   };
 
+  // Email: pick where to write it — Gmail, Outlook or Yahoo open a ready-to-send message in a new browser tab;
+  // "Mail app" uses the computer's or phone's own mail app.
+  const emailMenu = (btn, subject, body) => {
+    const old = document.querySelector(".mailmenu"); if (old) { old.remove(); if (old.dataset.for === "1" && btn.dataset.open === "1") { btn.dataset.open = ""; return; } }
+    const su = encodeURIComponent(subject), bo = encodeURIComponent(body);
+    const opts = [
+      ["Gmail", `https://mail.google.com/mail/?view=cm&fs=1&su=${su}&body=${bo}`],
+      ["Outlook", `https://outlook.live.com/mail/0/deeplink/compose?subject=${su}&body=${bo}`],
+      ["Yahoo Mail", `https://compose.mail.yahoo.com/?subject=${su}&body=${bo}`],
+      ["Mail app", `mailto:?subject=${su}&body=${bo}`],
+    ];
+    const m = document.createElement("div");
+    m.className = "mailmenu"; m.dataset.for = "1"; m.setAttribute("role", "menu");
+    m.innerHTML = `<span>Send the email with</span>` + opts.map(([n, h]) => `<a role="menuitem" href="${h}"${h.startsWith("mailto") ? "" : ' target="_blank" rel="noopener"'}>${n}</a>`).join("");
+    btn.closest(".share").insertAdjacentElement("afterend", m); btn.dataset.open = "1";
+    m.querySelector("a").focus();
+    const close = ev => { if (ev.type === "keydown" ? ev.key === "Escape" : !m.contains(ev.target) && !btn.contains(ev.target)) { m.remove(); btn.dataset.open = ""; document.removeEventListener("click", close, true); document.removeEventListener("keydown", close); } };
+    m.addEventListener("click", () => setTimeout(() => { m.remove(); btn.dataset.open = ""; }, 0));
+    setTimeout(() => { document.addEventListener("click", close, true); document.addEventListener("keydown", close); }, 0);
+  };
+
   // 2) Invite friends to make their own flight log (shares the maker, not your flights).
   window.flInviteBar = (el, { say }) => {
     const url = new URL("./", location.href.split("?")[0].split("#")[0]).href, text = "Make your own flight log and Instagram Story from this year's flights ✈";
@@ -177,7 +198,7 @@
     el.addEventListener("click", async e => {
       const b = e.target.closest("[data-sh]"); if (!b) return;
       const k = b.dataset.sh;
-      if (k === "email") location.href = `mailto:?subject=${encodeURIComponent("Make your own flight log")}&body=${encodeURIComponent(text + "\n\n" + url)}`;
+      if (k === "email") emailMenu(b, "Make your own flight log", text + "\n\n" + url);
       else if (k === "copy") { try { await navigator.clipboard.writeText(url); say("Link copied ✓ Send it to a friend."); } catch (err) { prompt("Copy this link:", url); } }
       else if (k === "more") { try { await navigator.share({ title: "Make your own flight log", text, url }); } catch (err) {} }
       else popup(linkTo(k, url, text));
@@ -195,5 +216,9 @@
 .sh-facebook .ic{background:#1877f2}.sh-threads .ic{background:#111}.sh-line .ic{background:#06c755}
 .sh-email .ic{background:#6b7a90}.sh-copy .ic{background:#e8a33a;color:#1d2b4a}.sh-save .ic{background:#1d2b4a}
 .sh-more .ic{background:transparent;color:inherit;box-shadow:inset 0 0 0 1.5px currentColor}
+.mailmenu{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px;padding:10px 12px;border-radius:12px;background:rgba(107,122,144,.12);font:500 13px var(--body,system-ui)}
+.mailmenu span{width:100%;opacity:.75;font-size:12px}
+.mailmenu a{padding:7px 14px;border-radius:999px;background:#6b7a90;color:#fff;text-decoration:none;font-weight:600}
+.mailmenu a:hover{background:#56657b}.mailmenu a:focus-visible{outline:2px solid #e8a33a;outline-offset:2px}
 @media (prefers-reduced-motion: reduce){.share .sh .ic{transition:none}}`;
 })();
