@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Year in Maps Global Strategy</title>
+<meta name="description" content="Where the free year-in-maps makers can earn fairly: competitors, first markets, customer segments, strategy options, a phased roadmap and legal checks.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Public+Sans:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: a single reading column like a flight briefing; route-code chips mark markets, a departure-board table carries the roadmap. */
+:root {
+  --bg: #f6f8fb;
+  --surface: #ffffff;
+  --ink: #14213a;
+  --muted: #56627a;
+  --line: #dbe2ec;
+  --accent: #1f5fbf;
+  --accent-soft: #e5eefb;
+  --est: #8a5a00;
+  --est-soft: #fff4dc;
+  --good: #1d7a4c;
+  --warn: #a8461d;
+  --f-display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Public Sans", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1424; --surface: #141d31; --ink: #e6ecf7; --muted: #9aa8c0; --line: #26324a;
+    --accent: #7fb0ff; --accent-soft: #1a2a48; --est: #f2c46b; --est-soft: #2c2412;
+    --good: #6fd1a0; --warn: #ff9e74; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1424; --surface: #141d31; --ink: #e6ecf7; --muted: #9aa8c0; --line: #26324a;
+  --accent: #7fb0ff; --accent-soft: #1a2a48; --est: #f2c46b; --est-soft: #2c2412;
+  --good: #6fd1a0; --warn: #ff9e74; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { color-scheme: light; }
+body { margin: 0; }
+img { max-width: 100%; }
+body {
+  background: var(--bg); color: var(--ink);
+  font: 400 16px/1.65 var(--f-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 760px; margin: 0 auto; padding-block: 48px 80px; display: grid; gap: 48px; }
+header { display: grid; gap: 14px; border-bottom: 2px solid var(--ink); padding-bottom: 28px; }
+.eyebrow { font: 500 12px/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; line-height: 1.15; margin: 0; }
+h1 { font-size: clamp(2rem, 5vw, 2.9rem); font-weight: 700; letter-spacing: -.01em; }
+h2 { font-size: 1.6rem; font-weight: 700; }
+h3 { font-size: 1.12rem; font-weight: 700; }
+p { margin: 0; }
+.lede { font-size: 1.12rem; color: var(--muted); max-width: 62ch; }
+.meta { font: 500 12px/1.6 var(--f-mono); color: var(--muted); }
+section { display: grid; gap: 18px; }
+section > h2 { display: flex; gap: 12px; align-items: baseline; }
+section > h2 .n { font: 500 13px var(--f-mono); color: var(--accent); }
+ul, ol { margin: 0; padding-left: 1.25em; display: grid; gap: 6px; }
+a { color: var(--accent); text-underline-offset: 2px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+sup a { font: 500 11px var(--f-mono); text-decoration: none; }
+.est { background: var(--est-soft); color: var(--est); font: 500 11px/1 var(--f-mono); padding: 3px 6px; border-radius: 3px; letter-spacing: .05em; text-transform: uppercase; white-space: nowrap; }
+.callout { background: var(--surface); border: 1px solid var(--line); padding: 18px 20px; display: grid; gap: 10px; }
+.callout.key { border-left: 4px solid var(--accent); }
+.summary { display: grid; gap: 12px; counter-reset: s; list-style: none; padding: 0; }
+.summary li { display: grid; grid-template-columns: 28px 1fr; gap: 10px; }
+.summary li::before { counter-increment: s; content: counter(s); font: 500 13px/1.7 var(--f-mono); color: var(--accent); }
+.tbl { overflow-x: auto; border: 1px solid var(--line); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 14.5px; line-height: 1.5; }
+th, td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+th { font: 500 11px/1.4 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); background: var(--accent-soft); }
+tr:last-child td { border-bottom: 0; }
+td.name { font-weight: 600; white-space: nowrap; }
+.markets { display: grid; gap: 14px; }
+.mkt { background: var(--surface); border: 1px solid var(--line); padding: 16px 18px; display: grid; gap: 8px; min-width: 0; }
+.mkt-head { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.code { font: 500 13px/1 var(--f-mono); background: var(--ink); color: var(--bg); padding: 5px 7px; letter-spacing: .06em; }
+.tier { font: 500 11px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; padding: 4px 7px; border: 1px solid currentColor; }
+.t1 { color: var(--good); } .t2 { color: var(--accent); } .t3 { color: var(--muted); }
+.mkt dl { margin: 0; display: grid; grid-template-columns: 120px 1fr; gap: 4px 12px; font-size: 14.5px; }
+.mkt dt { font: 500 11px/1.9 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.mkt dd { margin: 0; min-width: 0; }
+.board td:first-child { font-family: var(--f-mono); font-size: 13px; white-space: nowrap; color: var(--accent); }
+.signals { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.sig { background: var(--surface); border: 1px solid var(--line); padding: 16px 18px; display: grid; gap: 8px; align-content: start; }
+.sig h3 { font-size: 1rem; }
+.sig.go h3 { color: var(--good); } .sig.stop h3 { color: var(--warn); }
+.refs { font-size: 13.5px; color: var(--muted); }
+.refs ol { gap: 4px; }
+.refs li { overflow-wrap: anywhere; }
+.small { font-size: 14px; color: var(--muted); }
+@media (max-width: 520px) {
+  .mkt dl { grid-template-columns: 1fr; }
+  .mkt dt { line-height: 1.4; margin-top: 6px; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">Strategy briefing · November 2026</span>
+  <h1>Year in Maps: where to grow, and how to earn fairly</h1>
+  <p class="lede">A plain-language strategy report for the free flight log, travel story and food map makers: who else is in the market, which countries to try first, who might pay, which business model fits, and the legal checks to do before taking money.</p>
+  <p class="meta">Products: <a href="https://reby0318.github.io/flight-log-2026/make/">Flight Log maker</a> · <a href="https://reby0318.github.io/us-travel-story/">US/World travel story</a> · <a href="https://reby0318.github.io/world-food-map-site/">World Food Map</a><br>Facts carry a numbered source. Anything marked <span class="est">estimate</span> is my own assumption for planning, not a sourced figure. This is not legal or tax advice.</p>
+</header>
+
+<section>
+  <h2>Summary</h2>
+  <ol class="summary">
+    <li><p><strong>The demand for year-end recaps is real and huge, but mostly captured inside big apps.</strong> Spotify Wrapped 2025 reached 200 million users and 500 million shares in its first day.<sup><a href="#r1">1</a></sup> Flighty, Polarsteps and American Airlines all ship their own recaps.<sup><a href="#r2">2</a>,<a href="#r5">5</a>,<a href="#r7">7</a></sup> Your opening is the person whose year is spread across many apps, or who uses none of them.</p></li>
+    <li><p><strong>Own the gap: one place for all your maps, no app, no account, beautiful Story pictures.</strong> Competitors recap only what happened inside their app (Flighty: flights; Polarsteps: tracked trips; Beli: restaurants). None combines flights, places and food into one shareable set.</p></li>
+    <li><p><strong>Start with Taiwan plus the US, in Traditional Chinese and English.</strong> Taiwanese made a record 18.9 million trips abroad in 2025,<sup><a href="#r10">10</a></sup> Taiwan sent the largest share of Threads traffic in late 2025,<sup><a href="#r11">11</a></sup> and you are native to the language and culture. The US is where print-on-demand works best and where you live.</p></li>
+    <li><p><strong>Stay free; earn from prints, tips and group recaps.</strong> A subscription app would compete head-on with funded apps. Expect small numbers at first: a holiday test that earns a few hundred dollars would be a good result, not a failure. <span class="est">estimate</span></p></li>
+    <li><p><strong>Before any money changes hands:</strong> remove airline logos from anything sold, sell through a merchant-of-record platform so it handles sales tax and VAT, keep the "your data never leaves your browser" design, and confirm your own work authorization if you are on a visa.</p></li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="n">01</span>Market and competitors</h2>
+  <p>"Year in review" is now a standard end-of-year ritual. Spotify reported Wrapped 2025 reached 200 million engaged users within 24 hours (it took about 62 hours in 2024) and over 500 million shares on day one.<sup><a href="#r1">1</a></sup> Travel apps copied the format: Flighty publishes a yearly "Flighty Passport",<sup><a href="#r2">2</a></sup> Polarsteps launched "Unpacked" in its app on 15 December 2025,<sup><a href="#r5">5</a></sup> and American Airlines launched "Cleared for Landing", a Wrapped-style report for its flyers.<sup><a href="#r7">7</a></sup></p>
+
+  <div class="tbl"><table>
+    <thead><tr><th>Product</th><th>What it recaps</th><th>How it makes money</th><th>Limit you can exploit</th></tr></thead>
+    <tbody>
+      <tr><td class="name">Flighty</td><td>Flights tracked in the app; yearly Passport</td><td>Subscription: about $59.99/yr or $299 lifetime in the US (tracker checked Jul 2026)<sup><a href="#r3">3</a></sup></td><td>Paid, iPhone-first, flights only; past flights must be in the app</td></tr>
+      <tr><td class="name">Polarsteps</td><td>Trips tracked by GPS; "Unpacked" recap; travel books</td><td>Free app, paid Plus tier, printed Travel Books priced by pages and binding<sup><a href="#r4">4</a></sup> (a third-party guide puts books around €30–80<sup><a href="#r6">6</a></sup>)</td><td>Needs tracking during the trip; recap lives inside the app; Europe-centric</td></tr>
+      <tr><td class="name">Been</td><td>Countries visited map</td><td>Free, with Pro plans (monthly to lifetime)<sup><a href="#r8">8</a></sup></td><td>One map, few design choices, not made for Stories</td></tr>
+      <tr><td class="name">Beli</td><td>Restaurants you rank</td><td>Free consumer app; 75M+ reviews across 30,000 cities (Sep 2025)<sup><a href="#r9">9</a></sup></td><td>Lists and rankings, not a world food map picture</td></tr>
+      <tr><td class="name">Airline recaps</td><td>One airline's flights (e.g. American)<sup><a href="#r7">7</a></sup></td><td>Free loyalty marketing</td><td>Only one airline; most travelers fly several</td></tr>
+      <tr><td class="name">Custom map posters (Mapiful, Etsy shops)</td><td>A city or "places I've been" print</td><td>Posters; reviews report roughly $30–80 for Mapiful<sup><a href="#r12">12</a></sup></td><td>Static decor, not made from your actual year</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout key">
+    <h3>The gap you can own</h3>
+    <ul>
+      <li><strong>All your maps in one set:</strong> flights, states and countries, food. Nobody else combines them.</li>
+      <li><strong>No app, no account, works for any airline:</strong> people can make a recap even if they never used Flighty or Polarsteps. Import through their own AI assistant is unusual and helpful.</li>
+      <li><strong>Design-first Story pictures:</strong> 5+ styles, sized for Instagram Stories, with one-tap sharing to Threads and LINE, which matter in Asia and which the US-built apps rarely prioritize.</li>
+      <li><strong>Privacy by design:</strong> the makers run in the browser. That is a selling point and a legal advantage (see section 05).</li>
+    </ul>
+    <p class="small">Main threat: the big apps launch their recaps in December with marketing budgets you don't have. Position yours as the one that puts them all together, not as a replacement.</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">02</span>Which countries first</h2>
+  <p>Rank by three questions: do people there share year-end pictures on Stories, Threads or LINE; can you speak to them well; and can you deliver a print there at a fair price?</p>
+
+  <div class="markets">
+    <article class="mkt">
+      <div class="mkt-head"><span class="code">TPE</span><h3>Taiwan (and Taiwanese abroad)</h3><span class="tier t1">Start now</span></div>
+      <dl>
+        <dt>Why</dt><dd>Record 18.9 million outbound trips in 2025, up about 12%; Japan was the top destination (6.73M), then China and Korea.<sup><a href="#r10">10</a></sup> Taiwan produced the largest share of Threads web traffic in September 2025<sup><a href="#r11">11</a></sup> and was named one of the three most active Threads countries in 2024.<sup><a href="#r11">11</a></sup> About 23,000 Taiwanese students are in the US.<sup><a href="#r13">13</a></sup></dd>
+        <dt>Language</dt><dd>Traditional Chinese (繁體中文) for the maker, Story text and captions. Your native advantage; few competitors do this well.</dd>
+        <dt>Platforms</dt><dd>Instagram Stories, Threads, LINE (you already have one-tap sharing to all three).</dd>
+        <dt>Payments</dt><dd>Cards through a merchant-of-record checkout. Local wallets (LINE Pay, JKOPay) are popular, but add them only if demand appears.</dd>
+        <dt>Prints</dt><dd>I could not confirm local print-on-demand production in Taiwan with Printful or Gelato. Prints may ship from Japan or the US, so check delivery time and shipping cost before promising holiday delivery. Lead with digital extras here.</dd>
+      </dl>
+    </article>
+    <article class="mkt">
+      <div class="mkt-head"><span class="code">SFO</span><h3>United States</h3><span class="tier t1">Start now</span></div>
+      <dl>
+        <dt>Why</dt><dd>Where you live and can test fast. Recap culture is strongest here (Wrapped, Flighty, Beli's Gen Z growth<sup><a href="#r9">9</a></sup>). Your flight log and US states map already fit US travelers.</dd>
+        <dt>Language</dt><dd>English (done).</dd>
+        <dt>Platforms</dt><dd>Instagram Stories, TikTok, Threads.</dd>
+        <dt>Prints</dt><dd>Best coverage: Printful runs its own facilities in Dallas and Charlotte plus Toronto and Tijuana,<sup><a href="#r14">14</a></sup> and Gelato produces locally in 32 countries.<sup><a href="#r15">15</a></sup> Fastest holiday delivery is here.</dd>
+      </dl>
+    </article>
+    <article class="mkt">
+      <div class="mkt-head"><span class="code">NRT</span><h3>Japan</h3><span class="tier t2">6–12 months</span></div>
+      <dl>
+        <dt>Why</dt><dd>LINE reached 100 million monthly users in Japan in December 2025;<sup><a href="#r16">16</a></sup> Japan was also among the three most active Threads countries in 2024.<sup><a href="#r11">11</a></sup> It is Taiwanese travelers' top destination, so a Taiwan launch reaches Japan trips naturally.</dd>
+        <dt>Language</dt><dd>Japanese needs a native-quality translation; machine translation will hurt trust.</dd>
+        <dt>Prints</dt><dd>Printful works with a partner facility in Japan for selected products.<sup><a href="#r14">14</a></sup></dd>
+        <dt>Law</dt><dd>APPI applies to foreign businesses serving people in Japan.<sup><a href="#r19">19</a></sup></dd>
+      </dl>
+    </article>
+    <article class="mkt">
+      <div class="mkt-head"><span class="code">LHR</span><h3>UK and EU</h3><span class="tier t2">6–12 months, English first</span></div>
+      <dl>
+        <dt>Why</dt><dd>Strong travel and print-book culture (Polarsteps is Dutch and reports 20M+ travelers<sup><a href="#r4">4</a></sup>). Great print coverage: Printful in the UK, Latvia and Spain;<sup><a href="#r14">14</a></sup> Gelato across Europe.<sup><a href="#r15">15</a></sup></dd>
+        <dt>Watch out</dt><dd>Polarsteps is the home favorite; GDPR rules apply once you sell to or track EU users (section 05).</dd>
+      </dl>
+    </article>
+    <article class="mkt">
+      <div class="mkt-head"><span class="code">SYD</span><h3>Australia</h3><span class="tier t3">Later</span></div>
+      <dl>
+        <dt>Why</dt><dd>English-speaking, heavy long-haul flyers; Printful lists partner production in Australia.<sup><a href="#r14">14</a></sup> No localization needed beyond dates and units.</dd>
+      </dl>
+    </article>
+    <article class="mkt">
+      <div class="mkt-head"><span class="code">ICN</span><span class="code">BKK</span><h3>Korea and Thailand</h3><span class="tier t3">Later</span></div>
+      <dl>
+        <dt>Why</dt><dd>Thailand: LINE is used by over 80% of the country.<sup><a href="#r16">16</a></sup> Korea: big Instagram culture, but KakaoTalk is the main messenger, so it needs its own share button and Korean copy.</dd>
+        <dt>Watch out</dt><dd>Each needs a native-language version and local payment habits; Korea's PIPA has extra rules for overseas businesses.<sup><a href="#r18">18</a></sup> Revisit after Japan.</dd>
+      </dl>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">03</span>Who might pay, and partners</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Segment</th><th>What they'd buy</th><th>How to reach them</th><th>Likelihood to pay</th></tr></thead>
+    <tbody>
+      <tr><td class="name">Gift buyers</td><td>A framed print or poster of someone's year ($10–30)</td><td>December posts: "Give them their year on the wall"</td><td>Highest in Nov–Dec; the clearest reason to pay</td></tr>
+      <tr><td class="name">Long-distance couples</td><td>"Our year" map: both people's flights to each other; anniversary print</td><td>Threads, Instagram, Dcard (Taiwan)</td><td>Good: emotional, gift-driven</td></tr>
+      <tr><td class="name">Students abroad</td><td>"My year abroad" map for family; print for graduation</td><td>Taiwanese student associations; study-abroad offices (Taiwan's MOE funds about 5,000 students a year abroad<sup><a href="#r17">17</a></sup>)</td><td>Low budget individually; better as a free school partnership that spreads the tool</td></tr>
+      <tr><td class="name">Clubs, classes, bands</td><td>Group recap: everyone's trips on one map, plus a team poster (from ~$50)</td><td>Direct outreach to orchestras, touring bands, travel clubs, MBA classes</td><td>Best revenue per sale, but each needs personal service</td></tr>
+      <tr><td class="name">Travel creators</td><td>Custom-branded Story styles; free in exchange for a credit</td><td>DM creators who already post year recaps</td><td>Pay little; worth it for reach</td></tr>
+      <tr><td class="name">Travel agencies, tour operators</td><td>"Your trip recap" sent to clients after a group tour (white-label)</td><td>Taiwanese agencies running Japan tours</td><td>Medium; slow sales cycle</td></tr>
+      <tr><td class="name">Airlines, loyalty programs</td><td>Licensed recap for their members</td><td>Only after you have traction to show</td><td>Late stage; needs a company, contracts and security review</td></tr>
+    </tbody>
+  </table></div>
+  <p class="small">Touring musicians and ensembles are a natural fit given your music background: a tour map poster for fans is a familiar product type, and it is sold by the band, so they bring the buyers.</p>
+</section>
+
+<section>
+  <h2><span class="n">04</span>Strategy options</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Option</th><th>How it works</th><th>Pros</th><th>Cons</th><th>Fit now</th></tr></thead>
+    <tbody>
+      <tr><td class="name">A. Free + prints, extras, tips</td><td>Core stays free; print-on-demand at fair prices; pay-what-you-want extra styles; tip jar</td><td>No hosting cost; no inventory; generous image builds word of mouth; easy to stop</td><td>Small, seasonal income; most users will pay nothing</td><td><strong>Yes, start here</strong></td></tr>
+      <tr><td class="name">B. Freemium app</td><td>Native app with a subscription for extra styles and tracking</td><td>Recurring revenue if it works</td><td>Competes head-on with Flighty and Polarsteps; app store fees; months of building; accounts mean more privacy duties</td><td>No; revisit only with strong repeat use</td></tr>
+      <tr><td class="name">C. Group and B2B recaps</td><td>Paid recaps for clubs, classes, bands, agencies; later white-label</td><td>Higher price per sale; buyers have budgets</td><td>Sales effort; custom work; needs invoicing</td><td>Yes, as a small add-on to test</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout">
+    <h3>Realistic first-season numbers <span class="est">estimate</span></h3>
+    <p>These are planning assumptions to test, not forecasts. If the holiday push brings 1,000–3,000 people who finish a map, and 1–2% buy a print with $4–8 left after the print shop's cost, that is roughly 10–60 orders and $40–480. Add a few tips and maybe one or two group recaps. Use the test to learn which segment and which country responds, not to judge the idea on dollars alone.</p>
+    <p class="small">Fair-price rule: set each print price as the print provider's base cost plus shipping plus a small, stated margin. Show it ("$12 = $8 print + $4 to keep this free") so buyers see it is fair.</p>
+  </div>
+
+  <h3>Phased roadmap</h3>
+  <div class="tbl"><table class="board">
+    <thead><tr><th>When</th><th>What to do</th><th>Done when</th></tr></thead>
+    <tbody>
+      <tr><td>Nov 2026</td><td>Add Traditional Chinese to the makers; remove airline logos from any paid output; set up one merchant-of-record checkout and one print provider; write a short privacy notice</td><td>A friend in Taiwan can make and order a print without help</td></tr>
+      <tr><td>Dec 2026</td><td>Holiday test: post in Taiwan (Threads, LINE groups, Dcard) and the US (Instagram, Threads); gift angle; pitch 5–10 groups for a $50+ group recap</td><td>You have numbers for makers, shares, orders, tips, inquiries by country</td></tr>
+      <tr><td>Jan–Feb 2027</td><td>Review against the signals below; interview 5 buyers and 5 non-buyers</td><td>Go/no-go decision written down</td></tr>
+      <tr><td>Mar–Aug 2027</td><td>If go: Japanese version; one study-abroad or club partnership; a "trip recap" kit for one Taiwanese tour agency; keep improving the free core</td><td>One repeatable channel that brings buyers without you posting daily</td></tr>
+      <tr><td>Sep–Dec 2027</td><td>Second holiday season with UK/EU English push; consider a small company and proper bookkeeping if income is steady</td><td>Season 2 beats season 1 on orders per 1,000 makers</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="signals">
+    <div class="sig go"><h3>Go signals</h3><ul><li>Print or extra conversion at or above 1% of makers <span class="est">suggested</span></li><li>People share without being asked (shares per maker rising)</li><li>At least 2–3 groups ask about a group recap</li><li>One country clearly outperforms; focus there</li></ul></div>
+    <div class="sig stop"><h3>Stop or change signals</h3><ul><li>Many makers, almost no orders: keep it free as a portfolio piece; test digital extras instead of prints</li><li>Refunds or complaints about print quality or delivery time</li><li>Time spent on support exceeds what the income justifies for you</li></ul></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">05</span>Legal and compliance checklist</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Area</th><th>What applies</th><th>What to do</th></tr></thead>
+    <tbody>
+      <tr><td class="name">Airline logos</td><td>Putting a company's logo on products you sell is generally treated as trademark infringement, not fair use, and airlines enforce their marks.<sup><a href="#r20">20</a></sup></td><td>No airline logos on prints, posters, paid extras or ads. Use neutral text badges (airline name or code). Consider the same for the free tool once you earn money from it.</td></tr>
+      <tr><td class="name">Map data</td><td>Base maps carry their own licenses (some require attribution, some are public domain).</td><td>Check the license of every map source you use and add the required credit to prints.</td></tr>
+      <tr><td class="name">EU and UK (GDPR, UK GDPR)</td><td>Applies to non-EU businesses that offer goods or services to people in the EU or monitor them; such businesses may need an EU representative (Art. 27).<sup><a href="#r19">19</a></sup></td><td>Keep processing in the browser; collect only what checkout needs; privacy notice; avoid tracking cookies, or ask consent.</td></tr>
+      <tr><td class="name">Taiwan (PDPA)</td><td>Amended in 2025 to create a Personal Data Protection Commission; effective date set by the Executive Yuan.<sup><a href="#r18">18</a></sup></td><td>Privacy notice in Traditional Chinese; recheck when the commission starts work.</td></tr>
+      <tr><td class="name">Japan (APPI)</td><td>Reaches foreign operators handling data of people in Japan when providing goods or services there.<sup><a href="#r19">19</a></sup></td><td>Same minimal-data approach; Japanese privacy notice at launch.</td></tr>
+      <tr><td class="name">Korea (PIPA)</td><td>Rules for overseas businesses' local representatives changed in October 2025.<sup><a href="#r18">18</a></sup></td><td>Get advice before targeting Korea.</td></tr>
+      <tr><td class="name">US state privacy laws</td><td>About 20 states have comprehensive laws; most apply only above thresholds such as 100,000 consumers, but a few have none.<sup><a href="#r21">21</a></sup></td><td>You are likely below most thresholds; still publish a privacy notice and honor deletion requests.</td></tr>
+      <tr><td class="name">Sales tax and VAT</td><td>Digital sales trigger VAT abroad (e.g. Taiwan requires foreign e-service sellers to register above NT$600,000 a year, raised from NT$480,000 in April 2025).<sup><a href="#r22">22</a></sup></td><td>Sell digital items through a merchant of record that collects and pays these taxes: Lemon Squeezy (about 5% + 50¢) or Gumroad (10%, merchant of record since Jan 2025).<sup><a href="#r23">23</a></sup> For prints, check which taxes your print provider collects in each country.</td></tr>
+      <tr><td class="name">Tips</td><td>Ko-fi takes no fee on tips by many accounts, but fee settings vary; Buy Me a Coffee takes 5%.<sup><a href="#r24">24</a></sup></td><td>Confirm current fees on the official page before linking.</td></tr>
+      <tr><td class="name">Consumer law</td><td>EU/UK buyers have withdrawal rights for many online purchases; personalized goods are often treated differently.</td><td>Clear refund policy for misprints; state that personalized prints can't be returned for change of mind, where the law allows.</td></tr>
+      <tr><td class="name">Your work authorization</td><td>For F-1 students, actively running an online business is generally treated as self-employment that needs authorization (for example OPT related to your degree); STEM OPT does not allow self-employment.<sup><a href="#r25">25</a></sup></td><td>If you hold any US visa, ask your school's international office (DSO) or an immigration attorney before you earn any income, including tips. Until cleared, keep everything free.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section class="refs">
+  <h2>Sources</h2>
+  <ol>
+    <li id="r1">Music Business Worldwide, "Spotify Wrapped campaign hit 200M engaged users in 24 hours", Dec 2025. <a href="https://www.musicbusinessworldwide.com/spotify-wrapped-campaign-hit-200m-engaged-users-in-24-hours-a-19-yoy-increase">musicbusinessworldwide.com</a>; TechCrunch, Dec 4 2025, <a href="https://techcrunch.com/2025/12/04/spotify-says-wrapped-2025-is-its-biggest-yet-with-200m-users-in-its-first-day">techcrunch.com</a></li>
+    <li id="r2">Flighty Passport referenced in search results on airline year-in-review features (2025). <a href="https://www.australianfrequentflyer.com.au/community/threads/your-2025-year-of-travel-in-review.121786">australianfrequentflyer.com.au</a></li>
+    <li id="r3">RecurDash, Flighty pricing (verified against flighty.com Jul 24 2026). <a href="https://recurdash.com/subscription-pricing/flighty">recurdash.com</a>. Confirm in the App Store.</li>
+    <li id="r4">Polarsteps Help Center, "What is the price of a Travel Book"; Polarsteps news, "20 million travelers". <a href="https://support.polarsteps.com/hc/en-us/articles/24003935464466-What-is-the-price-of-a-Travel-Book">support.polarsteps.com</a>; <a href="https://www.polarsteps.com/news/20-million-travelers-and-counting-tech-success-story-polarsteps-celebrates-its-fast-growing-community">polarsteps.com/news</a></li>
+    <li id="r5">Polarsteps, "Unpacked and 2025 travel report". <a href="https://www.polarsteps.com/news/polarsteps-unpacked-and-2025-travel-report-the-year-in-travel">polarsteps.com/news</a></li>
+    <li id="r6">PilotPlans, Polarsteps review (third-party price range). <a href="https://www.pilotplans.com/blog/polarsteps-review">pilotplans.com</a></li>
+    <li id="r7">Syndicated report on American Airlines' "Cleared for Landing" year-end highlights. <a href="https://groundnews.lakegeneva.lib.wi.us/article/aa-generating-end-of-year-highlights-for-flyers-how-to-access">via Ground News</a></li>
+    <li id="r8">Been: App Store listing (Brazil storefront), Pro plans. <a href="https://apps.apple.com/BR/app/id1659477938">apps.apple.com</a></li>
+    <li id="r9">Wikipedia, "Beli (app)" (review counts as of Sep 2025). <a href="https://en.wikipedia.org/wiki/Beli_(app)">wikipedia.org</a></li>
+    <li id="r10">Taiwan News, citing the Tourism Administration (2025 outbound trips); Taipei Times, Jan 2026. <a href="https://www.taiwannews.com.tw/en/news/6290401">taiwannews.com.tw</a>; <a href="https://www.taipeitimes.com/News/taiwan/archives/2026/01/27/2003851300">taipeitimes.com</a></li>
+    <li id="r11">Statista, countries with most Threads traffic (SimilarWeb, Sep 2025); Gigazine, "Threads reaches 175 million MAU" (Jul 2024). <a href="https://de.statista.com/statistik/daten/studie/1429505/umfrage/ranking-laender-meiste-active-users-threads">statista.com</a>; <a href="https://www.gigazine.net/gsc_news/en/20240704-meta-threads-175m">gigazine.net</a></li>
+    <li id="r12">Cassie Scroggins, "Is Mapiful Worth It?" (review). <a href="https://www.cassiescroggins.com/mapiful-review/">cassiescroggins.com</a></li>
+    <li id="r13">Taiwan News citing AIT / Open Doors 2024 (23,157 students); Open Doors Taiwan fact sheet 2025. <a href="https://www.taiwannews.com.tw/news/5974439">taiwannews.com.tw</a>; <a href="https://opendoorsdata.org/wp-content/uploads/2026/01/OD_Taiwan_Fact-Sheet-2025.pdf">opendoorsdata.org</a></li>
+    <li id="r14">Printful Support, "Where are Printful products printed?" <a href="https://support.printful.com/hc/en-us/articles/41396775395729-Where-are-Printful-products-printed">support.printful.com</a></li>
+    <li id="r15">Gelato, print on demand in Europe and network map. <a href="https://www.gelato.com/print-on-demand/europe">gelato.com</a>; <a href="https://www.gelato.com/global/gelato-network-map">network map</a></li>
+    <li id="r16">LY Corporation, company history and global business pages. <a href="https://www.lycorp.co.jp/en/company/history/lycorp/">lycorp.co.jp history</a>; <a href="https://www.lycorp.co.jp/en/company/global/">lycorp.co.jp global</a></li>
+    <li id="r17">Taipei Times, MOE Study Abroad Program, Mar 2025. <a href="https://www.taipeitimes.com/News/taiwan/archives/2025/03/04/2003832876">taipeitimes.com</a></li>
+    <li id="r18">Baker McKenzie, "Taiwan: Amendment to Personal Data Protection Act" (Oct 2025); K&amp;L Gates (Jan 2026); Digital Policy Alert on Korea PIPA amendments (Oct 2025). <a href="https://www.bakermckenzie.com/en/insight/publications/alerts/2025/10/taiwan-amendment-to-personal-data-protection-act">bakermckenzie.com</a>; <a href="https://www.klgates.com/New-Developments-in-the-Taiwan-Personal-Data-Protection-Act-1-13-2026">klgates.com</a>; <a href="https://digitalpolicyalert.org/event/33517-personal-information-protection-commission-amendment-to-enforcement-decree-of-personal-information-protection-act-enters-into-force">digitalpolicyalert.org</a></li>
+    <li id="r19">O'Melveny, "Japan enacts significant amendments to its data privacy law"; Chambers Data Protection &amp; Privacy 2026 (Japan); Columbia Law, note on GDPR Art. 3(2) and Art. 27. <a href="https://www.omm.com/resources/alerts-and-publications/alerts/japan-enacts-significant-amendments-to-its-data-privacy-law/">omm.com</a>; <a href="https://practiceguides.chambers.com/practice-guides/data-protection-privacy-2026/japan">chambers.com</a>; <a href="https://moglen.law.columbia.edu/twiki/bin/view/LawNetSoc/RisakoSuzukiFirstEssay">columbia.edu</a></li>
+    <li id="r20">Sierra IP Law, "Trademark Fair Use"; DuetsBlog, "Nominative fair use of another's logo"; World IP Review on Delta enforcement. <a href="https://sierraiplaw.com/trademark-fair-use/">sierraiplaw.com</a>; <a href="https://www.duetsblog.com/2020/03/articles/advertising/nominative-fair-use-of-anothers-logo/">duetsblog.com</a>; <a href="https://www.worldipreview.com/copyright/delta-seeks-to-ground-pirate-travel-company-9331">worldipreview.com</a></li>
+    <li id="r21">Feroot, "When do U.S. state privacy laws apply" (Feb 2026); Baker Donelson (2026). <a href="https://www.feroot.com/blog/when-do-u-s-state-privacy-laws-apply-scope-and-thresholds">feroot.com</a>; <a href="https://bakerdonelson.com/privacy-laws-ring-in-the-new-year-state-requirements-expand-across-the-us-in-2026">bakerdonelson.com</a></li>
+    <li id="r22">Fonoa, "Taiwan raises VAT registration threshold for foreign e-commerce operators" (Apr 2025). <a href="https://www.fonoa.com/resources/blog/taiwan-raises-vat-registration-threshold-foreign-e-commerce-operators">fonoa.com</a>. Confirm with Taiwan's Ministry of Finance.</li>
+    <li id="r23">Flavio Copes, "Lemon Squeezy vs Gumroad"; We Are Founders, "Gumroad fees 2026". <a href="https://flaviocopes.com/payment-providers/lemon-squeezy-vs-gumroad/">flaviocopes.com</a>; <a href="https://www.wearefounders.uk/gumroad-fees-2026-what-sellers-actually-pay-per-sale/">wearefounders.uk</a>. Confirm on official pricing pages.</li>
+    <li id="r24">Schoolmaker, Ko-fi and Buy Me a Coffee pricing guides (2026). <a href="https://schoolmaker.com/blog/ko-fi-pricing">Ko-fi</a>; <a href="https://schoolmaker.com/blog/buy-me-a-coffee-pricing">Buy Me a Coffee</a></li>
+    <li id="r25">Babson College ISSS, "Entrepreneurial activities"; Bentley University, entrepreneurship for international students. <a href="https://babson.edu/glavin-office/isss/employment/entrepreneurial-activities/">babson.edu</a>; <a href="https://www.bentley.edu/offices/center-international-student-scholars/entrepreneurship">bentley.edu</a>. Your own school's DSO is the authority for your case.</li>
+  </ol>
+  <p class="small">Researched November 2026 with web search. Several figures come from secondary sources and are flagged in the text; prices and laws change, so confirm on official pages before acting.</p>
+</section>
+</div>
+</body>
+</html>
