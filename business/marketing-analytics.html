@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Year in Maps Marketing Analytics</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Marketing analytics plan for the Year in Maps makers: funnel metrics, cookie-free analytics, a holiday demand test, channel tracking and legal notes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column with a departures-board style index; wide tables scroll inside their own frames. */
+:root{
+  --paper:#f4f6f9; --card:#ffffff; --ink:#15233d; --muted:#56637a; --rule:#d6dde8;
+  --sky:#2a62c9; --sky-soft:#e3ecfb; --amber:#a86400; --amber-soft:#fbefd9;
+  --go:#1d7a4c; --go-soft:#ddf2e6; --stop:#b3372e; --stop-soft:#f8e1de;
+  --display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0f1626; --card:#162036; --ink:#e6ebf4; --muted:#9aa6bc; --rule:#2a3651;
+  --sky:#7aa7f5; --sky-soft:#1d2c4c; --amber:#f0b45a; --amber-soft:#3a2c14;
+  --go:#6fd3a0; --go-soft:#173a2a; --stop:#f08a80; --stop-soft:#3d1d1b; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0f1626; --card:#162036; --ink:#e6ebf4; --muted:#9aa6bc; --rule:#2a3651;
+  --sky:#7aa7f5; --sky-soft:#1d2c4c; --amber:#f0b45a; --amber-soft:#3a2c14;
+  --go:#6fd3a0; --go-soft:#173a2a; --stop:#f08a80; --stop-soft:#3d1d1b; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:16px/1.6 var(--body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:860px;margin:0 auto}
+a{color:var(--sky)} a:focus-visible,button:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.05;margin:0}
+h1{font-size:clamp(2.6rem,7vw,4.2rem);font-weight:800;letter-spacing:.01em;text-transform:uppercase}
+h2{font-size:2rem;text-transform:uppercase;letter-spacing:.02em}
+h3{font-size:1.3rem;text-transform:uppercase;letter-spacing:.03em;margin-top:8px}
+p{margin:0} .muted{color:var(--muted)}
+header{padding-block:48px 28px;display:grid;gap:14px;border-bottom:2px solid var(--ink)}
+.eyebrow{font:500 .78rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.lede{font-size:1.15rem;max-width:62ch}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;font:400 .82rem/1.4 var(--mono);color:var(--muted)}
+/* board-style index */
+.board{margin-top:28px;border:1px solid var(--rule);background:var(--card);border-radius:4px;overflow:hidden}
+.board a{display:grid;grid-template-columns:4.2rem 1fr auto;gap:12px;align-items:baseline;padding:10px 16px;border-top:1px solid var(--rule);text-decoration:none;color:var(--ink)}
+.board a:first-child{border-top:0}
+.board a:hover{background:var(--sky-soft)}
+.board .gate{font:500 .8rem var(--mono);color:var(--sky)}
+.board .what{font-weight:600}
+.board .st{font:500 .72rem var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+section{padding-top:56px;display:grid;gap:16px}
+section > p,section > ul,section > ol{max-width:68ch}
+ul,ol{margin:0;padding-left:1.25rem;display:grid;gap:6px}
+.assume{display:inline-block;font:500 .7rem/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;background:var(--amber-soft);color:var(--amber);padding:4px 6px;border-radius:3px;vertical-align:middle}
+.callout{border-left:4px solid var(--sky);background:var(--sky-soft);padding:14px 16px;display:grid;gap:8px}
+.callout.warn{border-color:var(--amber);background:var(--amber-soft)}
+.callout.stop{border-color:var(--stop);background:var(--stop-soft)}
+.tbl{overflow-x:auto;border:1px solid var(--rule);background:var(--card);border-radius:4px}
+table{border-collapse:collapse;width:100%;font-size:.92rem;min-width:620px}
+th,td{text-align:left;vertical-align:top;padding:10px 12px;border-top:1px solid var(--rule)}
+thead th{border-top:0;font:500 .72rem/1.3 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);background:var(--paper)}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--mono);font-size:.85rem}
+code{font:400 .86em var(--mono);background:var(--sky-soft);padding:1px 4px;border-radius:3px;word-break:break-word}
+pre{margin:0;overflow-x:auto;background:var(--card);border:1px solid var(--rule);border-radius:4px;padding:14px 16px;font:400 .82rem/1.55 var(--mono)}
+pre code{background:none;padding:0}
+/* funnel */
+.funnel{display:grid;gap:6px;background:var(--card);border:1px solid var(--rule);border-radius:4px;padding:16px}
+.step{display:grid;grid-template-columns:minmax(0,11rem) 1fr;gap:12px;align-items:center}
+.step .lab{font-size:.88rem;font-weight:600}
+.bar{height:26px;background:var(--sky);border-radius:2px;display:flex;align-items:center;padding-left:8px;color:var(--card);font:500 .75rem var(--mono);min-width:3.2rem}
+.bar.money{background:var(--amber)}
+.funnel .foot{font-size:.8rem;color:var(--muted);margin-top:6px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:4px;padding:16px;display:grid;gap:8px;align-content:start;min-width:0}
+.pill{display:inline-block;font:500 .7rem/1 var(--mono);text-transform:uppercase;letter-spacing:.06em;padding:5px 7px;border-radius:3px}
+.pill.go{background:var(--go-soft);color:var(--go)} .pill.mid{background:var(--amber-soft);color:var(--amber)} .pill.no{background:var(--stop-soft);color:var(--stop)}
+.pill.rec{background:var(--sky-soft);color:var(--sky)}
+button.copy{font:500 .8rem var(--mono);background:var(--ink);color:var(--paper);border:0;border-radius:3px;padding:8px 12px;cursor:pointer;justify-self:start}
+.small{font-size:.86rem}
+footer{margin-top:64px;padding-top:16px;border-top:1px solid var(--rule);font-size:.85rem;color:var(--muted);display:grid;gap:6px}
+@media (max-width:520px){.step{grid-template-columns:1fr}.board a{grid-template-columns:3.2rem 1fr}.board .st{display:none}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header>
+  <p class="eyebrow">Year in Maps · Marketing analytics plan · Holiday 2026</p>
+  <h1>Measure the maps before selling them</h1>
+  <p class="lede">The makers are free and people use them. The open question is whether anyone will pay for a print. This plan shows how to count the right things without collecting anyone's travel data, and how to get a clear yes or no on demand by mid-December for close to $0.</p>
+  <div class="meta"><span>Covers: Flight Log maker, US/World Travel Story, World Food Map</span><span>Prices and terms checked: Nov 6, 2026</span></div>
+  <nav class="board" aria-label="Sections">
+    <a href="#this-week"><span class="gate">START</span><span class="what">What to do this week</span><span class="st">3 steps</span></a>
+    <a href="#funnel"><span class="gate">1</span><span class="what">The funnel and 8 metrics</span><span class="st">Definitions</span></a>
+    <a href="#tools"><span class="gate">2</span><span class="what">Cookie-free analytics: which tool</span><span class="st">Compare</span></a>
+    <a href="#events"><span class="gate">2b</span><span class="what">Funnel events and what never to collect</span><span class="st">Setup</span></a>
+    <a href="#demand"><span class="gate">3</span><span class="what">Holiday demand test and go / no-go</span><span class="st">Nov 10 – Dec 21</span></a>
+    <a href="#channels"><span class="gate">4</span><span class="what">Channels, UTM links, weekly scorecard</span><span class="st">Tracking</span></a>
+    <a href="#legal"><span class="gate">5</span><span class="what">Legal notes</span><span class="st">Privacy, consent, email</span></a>
+  </nav>
+</header>
+
+<section id="this-week">
+  <h2>What to do this week</h2>
+  <ol>
+    <li><strong>Pick an analytics tool and make one account</strong> (recommended: GoatCounter, free, no cookies). Send Claude the one-line script it gives you. Claude adds it to every maker page with the funnel events below. Nothing is installed until you choose.</li>
+    <li><strong>Add a "Notify me about prints" button</strong> after the Story download. It counts clicks first. Collecting emails is optional and only through a form with clear consent.</li>
+    <li><strong>Open one Etsy listing and ask 10–15 friends the gift questions.</strong> Start filling the weekly scorecard on Monday, Nov 16.</li>
+  </ol>
+  <div class="callout"><p><strong>Why this order:</strong> without step 1, the other two tests have no denominator. "5 people clicked" means nothing unless you know whether 50 or 5,000 people finished a map.</p></div>
+</section>
+
+<section id="funnel">
+  <h2>1 · The funnel and 8 metrics</h2>
+  <p>A funnel is the path a visitor walks, from landing on the maker to (maybe) paying. Each step loses people. The useful question each week is: <em>where is the biggest drop, and did this week's change shrink it?</em></p>
+  <div class="funnel" role="img" aria-label="Example funnel out of 1,000 maker visitors, using assumed rates">
+    <div class="step"><span class="lab">Visit the maker</span><div class="bar" style="width:100%">1,000</div></div>
+    <div class="step"><span class="lab">Start a map</span><div class="bar" style="width:40%">400</div></div>
+    <div class="step"><span class="lab">Finish (download or watch)</span><div class="bar" style="width:20%">200</div></div>
+    <div class="step"><span class="lab">Share</span><div class="bar" style="width:4%">40</div></div>
+    <div class="step"><span class="lab">"Notify me" about prints</span><div class="bar money" style="width:0.8%">8</div></div>
+    <div class="step"><span class="lab">Buy a print</span><div class="bar money" style="width:0.2%">1–2</div></div>
+    <p class="foot">Example only, built from the assumed middle of each target range below. Bars are drawn to scale; the last two have a minimum width so their labels stay readable.</p>
+  </div>
+  <p>Every target range in this table is an <span class="assume">Assumption</span>. They are starting guesses based on typical free-tool funnels, to be replaced with your own numbers after 2–3 weeks.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>#</th><th>Metric</th><th>Definition (how it's counted)</th><th>Target range</th><th>If it's low, try</th></tr></thead>
+    <tbody>
+      <tr><td class="num">M1</td><td><strong>Maker visitors</strong></td><td>Unique visits to any <code>/make/</code> page per week. Pageview from the analytics tool.</td><td class="num">Grows week over week</td><td>Post more; check which channel sends people (section 4).</td></tr>
+      <tr><td class="num">M2</td><td><strong>Start rate</strong></td><td>Maps started ÷ maker visitors. "Started" = first flight added, sample loaded, or AI import used.</td><td class="num">30–50%</td><td>Make the sample one tap; show a finished example above the fold.</td></tr>
+      <tr><td class="num">M3</td><td><strong>Finish rate</strong></td><td>Finished ÷ started. "Finished" = Story PNG downloaded or animated story watched.</td><td class="num">40–60%</td><td>Push "Ask Claude/ChatGPT" import; fewer fields per flight.</td></tr>
+      <tr><td class="num">M4</td><td><strong>Share rate</strong></td><td>Share-button clicks (any platform, plus Invite friends) ÷ finished.</td><td class="num">10–25%</td><td>Better default caption; make Instagram the first button.</td></tr>
+      <tr><td class="num">M5</td><td><strong>Visits per share</strong></td><td>Visits arriving with <code>utm_medium=share</code> ÷ share clicks. Your free word-of-mouth engine.</td><td class="num">0.3–1.0</td><td>Put the maker link on the Story picture itself.</td></tr>
+      <tr><td class="num">M6</td><td><strong>Print interest</strong></td><td>"Notify me about prints" clicks ÷ finished.</td><td class="num">2–5%</td><td>Show a photo mockup of a framed print, with the price.</td></tr>
+      <tr><td class="num">M7</td><td><strong>Paid orders</strong></td><td>Orders from Etsy + friends' pre-orders, per week. Count strangers separately.</td><td class="num">≥5 by Dec 15</td><td>See go / no-go in section 3.</td></tr>
+      <tr><td class="num">M8</td><td><strong>Order rate</strong></td><td>Orders ÷ finished maps (same weeks).</td><td class="num">0.2–1%</td><td>Lower-price format (small print, digital Year Pass).</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout warn"><p><strong>Small numbers lie.</strong> Under about 200 finished maps, a rate can swing from 2% to 6% by luck alone. Until then, report counts ("7 notify clicks out of 140 finished") rather than percentages, and don't change course on one week.</p></div>
+  <p class="small muted">Diagnostic, not a target: the split of how people start (manual / sample / AI import). If most finishers came through AI import, that is the feature to promote.</p>
+</section>
+
+<section id="tools">
+  <h2>2 · Cookie-free analytics: which tool</h2>
+  <p>All four tools below avoid cookies and don't build profiles of individual people, which keeps the legal side simple (section 5). They differ on price and whether they can count <em>events</em> (button clicks), which the funnel needs.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Tool</th><th>Price (checked Nov 6, 2026)</th><th>Funnel events?</th><th>Commercial use</th><th>Verdict</th></tr></thead>
+    <tbody>
+      <tr><td><strong>GoatCounter</strong><br><span class="small muted">open source, hosted</span></td><td>Free "for reasonable public usage"; donations welcome</td><td>Yes: one HTML attribute or one line of JS per event</td><td>Its homepage says small-to-medium businesses are fine; millions of views a day are not</td><td><span class="pill rec">Recommended now</span></td></tr>
+      <tr><td><strong>Plausible</strong></td><td>Starter $9/mo (1 site, 10k pageviews); Growth $14; Business $19. 30-day trial, no card</td><td>Yes, on Starter. Events count toward the pageview quota. Funnel reports are on Business</td><td>Yes, paid product</td><td><span class="pill mid">Upgrade later</span> if demand is proven and you want built-in funnels</td></tr>
+      <tr><td><strong>Umami Cloud</strong></td><td>Hobby free: 100k events/mo, 1 site, 6-month history. Pro $20/mo</td><td>Yes</td><td>The pricing page doesn't say; check its terms first</td><td><span class="pill mid">Backup option</span></td></tr>
+      <tr><td><strong>Cloudflare Web Analytics</strong></td><td>Free</td><td>No, pageviews only</td><td>Yes</td><td><span class="pill no">Not enough</span> for this funnel</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout"><p><strong>Why GoatCounter:</strong> it's free, it counts events, and one account covers every maker. All your makers live on <code>reby0318.github.io</code>, so one GoatCounter site separates them by page path (<code>/flight-log-2026/make/</code>, <code>/us-travel-story/</code>, …). If the business takes off, a $5–10/month donation is a fair way to keep using it.</p></div>
+
+  <h3>Your steps to set it up (about 10 minutes)</h3>
+  <ol>
+    <li>Go to <a href="https://www.goatcounter.com/signup" rel="noopener">goatcounter.com/signup</a>. Pick a short code, e.g. <code>yearinmaps</code> (your dashboard becomes <code>yearinmaps.goatcounter.com</code>). Use your own email and a password only you know.</li>
+    <li>In the dashboard, open <strong>Settings → Site code</strong> and copy the one-line <code>&lt;script data-goatcounter=…&gt;</code> snippet.</li>
+    <li>Paste it to Claude and say "wire in analytics." Claude adds it to each maker page with the events in the next section, pushes to GitHub, and checks that the Pages build passes.</li>
+    <li>Visit your own maker once, then confirm the visit shows in the dashboard. Then turn off counting of your own visits: GoatCounter's help page "Ignore your own views" explains how.</li>
+    <li>Every Monday, copy the week's numbers into the scorecard (section 4).</li>
+  </ol>
+</section>
+
+<section id="events">
+  <h2>2b · Funnel events, and what never to collect</h2>
+  <p>An event is a named counter: "someone clicked Download." It carries no flight list, no name, no email. These are the event names to use across all makers, so the numbers add up:</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Funnel step</th><th>Event name</th><th>Fires when</th></tr></thead>
+    <tbody>
+      <tr><td>Start</td><td><code>start-manual</code> · <code>start-sample</code> · <code>start-ai</code></td><td>First flight added / sample loaded / AI import succeeds (once per visit)</td></tr>
+      <tr><td>Style</td><td><code>style-1</code> … <code>style-5</code></td><td>A style is picked (tells you which designs to print)</td></tr>
+      <tr><td>Finish</td><td><code>download-story</code> · <code>watch-story</code> · <code>open-log</code></td><td>Story PNG saved / animated story opened / log opened</td></tr>
+      <tr><td>Share</td><td><code>share-instagram</code> · <code>share-facebook</code> · <code>share-threads</code> · <code>share-line</code> · <code>invite-friends</code></td><td>Share button tapped (counts intent; we can't see whether they posted)</td></tr>
+      <tr><td>Money</td><td><code>print-notify</code> · <code>print-etsy</code> · <code>tip</code></td><td>"Notify me" tapped / Etsy link tapped / tip link tapped</td></tr>
+    </tbody>
+  </table></div>
+  <p>How it will look in the code (Claude does this part). A small helper sends only the event name and silently does nothing if the analytics script is blocked:</p>
+<pre><code>// One helper for every maker. Sends a name only, never user data.
+function track(name) {
+  try {
+    if (window.goatcounter &amp;&amp; window.goatcounter.count) {
+      window.goatcounter.count({ path: name, event: true });
+    }
+  } catch (e) { /* analytics must never break the maker */ }
+}
+
+document.getElementById('download').addEventListener('click', () =&gt; track('download-story'));
+
+// Simple buttons can skip JS entirely:
+// &lt;button data-goatcounter-click="print-notify"&gt;Notify me about prints&lt;/button&gt;</code></pre>
+  <div class="callout stop">
+    <p><strong>Never send to analytics, in event names, page URLs or anywhere else:</strong></p>
+    <ul>
+      <li>Flight details: airports, routes, dates, airlines, flight numbers, or the year someone typed</li>
+      <li>Names (the maker's "name" field), emails, or anything pasted into the AI import box</li>
+      <li>The Story picture or any generated image</li>
+      <li>Free-text input of any kind, even "just to debug"</li>
+    </ul>
+    <p>The makers already keep everything in the visitor's browser. Analytics must keep that promise: counts of button names only. Share links get UTM tags (section 4) but never the person's data.</p>
+  </div>
+</section>
+
+<section id="demand">
+  <h2>3 · Holiday demand test</h2>
+  <p>Goal: by <strong>Dec 15</strong>, know whether strangers will pay for a print, spending under $10. Three cheap tests run side by side from <strong>Nov 10</strong>. Print-on-demand shipping for the US usually needs orders by about Dec 10–12 to arrive before Christmas, so treat Dec 10 as the last day for gift orders and say so on the listing. <span class="assume">Assumption: check your print provider's published holiday cutoffs</span></p>
+  <div class="grid2">
+    <div class="card">
+      <h3>A · "Notify me about prints"</h3>
+      <p class="small">A button after Download. It opens a short, honest panel: <em>"Prints are coming: posters from about $24, small prints from about $12. Want to know when? This is a waitlist; nothing is charged."</em></p>
+      <p class="small"><strong>Counts:</strong> <code>print-notify</code> taps (M6). Optional: a link to a separate email form with an unticked consent box (section 5).</p>
+      <p class="small"><strong>Cost:</strong> $0.</p>
+    </div>
+    <div class="card">
+      <h3>B · One Etsy listing</h3>
+      <p class="small">"Your year in flights, personalized poster." One listing, two sizes: about <strong>$26</strong> poster, <strong>$14</strong> small print, made through an Etsy-connected print partner (e.g. Gelato or Printify). Buyer sends their flight list after ordering.</p>
+      <p class="small"><strong>Counts:</strong> listing views, favorites, orders (Etsy Stats) and <code>print-etsy</code> taps from your makers.</p>
+      <p class="small"><strong>Cost:</strong> $0.20 listing fee; about 10% of each sale in fees (6.5% transaction + ~3% + $0.25 payment processing in the US). Leave Etsy Offsite Ads off unless required.</p>
+    </div>
+    <div class="card">
+      <h3>C · Ask 10–15 friends</h3>
+      <p class="small">Ask about past behavior, not opinions of your idea:</p>
+      <ol class="small">
+        <li>What did you last give as a gift under $30?</li>
+        <li>Who do you know who flies or travels a lot?</li>
+        <li>(Show a mockup.) Would you give this to them? Why or why not?</li>
+        <li>What would you expect to pay for it?</li>
+        <li>Want me to make one for you now? (Send the Etsy link.)</li>
+      </ol>
+      <p class="small"><strong>Counts:</strong> yeses to Q5 that actually pay. Kind words don't count.</p>
+    </div>
+  </div>
+
+  <h3>What the results mean</h3>
+  <p>Decide on Dec 15 using all three tests together. Thresholds are <span class="assume">Assumptions</span>; agree on them <em>before</em> the test so the results can't be explained away afterwards.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Result</th><th>What you see by Dec 15</th><th>What it means</th><th>Next step</th></tr></thead>
+    <tbody>
+      <tr><td><span class="pill go">Go</span></td><td>≥200 finished maps, notify rate ≥3%, and ≥5 paid orders with at least 2 from strangers</td><td>People want a physical version and will pay a fair price</td><td>Add prints to the makers in January; plan Valentine's and graduation gift pushes</td></tr>
+      <tr><td><span class="pill mid">Maybe</span></td><td>Notify rate ≥3% but 0–2 orders</td><td>Interest is real; price, format or timing is off</td><td>In January, test a $3 digital Year Pass and a $10–12 small print</td></tr>
+      <tr><td><span class="pill no">No-go</span></td><td>≥200 finished maps, notify rate &lt;1%, no stranger orders</td><td>People enjoy the free tool but don't want to pay for prints</td><td>Keep it free; add a tip link; focus on group recaps for clubs and teams</td></tr>
+      <tr><td><span class="pill rec">Not enough data</span></td><td>&lt;200 finished maps</td><td>The test didn't reach enough people to judge</td><td>Fix reach first (section 4); rerun before Valentine's Day</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="channels">
+  <h2>4 · Channels, UTM links, weekly scorecard</h2>
+  <p>The makers produce a 1080×1920 Story picture, which is the right shape for Instagram, Threads, Facebook Stories, TikTok and LINE. Pinterest takes the same picture as a gift-idea pin.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Channel</th><th>Role</th><th>What to post</th><th>Watch</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Instagram</strong></td><td>Main channel; where Stories live</td><td>Your own Story + a Reel of the animated map; maker link in bio</td><td>Visits from <code>instagram</code>, shares back</td></tr>
+      <tr><td><strong>Threads</strong></td><td>Conversation, "make yours" replies</td><td>Your picture + "comment your top route and I'll…"</td><td>Visits per post</td></tr>
+      <tr><td><strong>Facebook</strong></td><td>Travel and frequent-flyer groups (follow each group's self-promo rules)</td><td>Your picture as a member, not an ad</td><td>Visits per group post</td></tr>
+      <tr><td><strong>LINE</strong></td><td>Friends and family in Taiwan and Japan</td><td>Direct shares in groups; holiday greeting angle</td><td>Visits from <code>line</code></td></tr>
+      <tr><td><strong>TikTok</strong></td><td>Reach to strangers</td><td>Screen recording: list of flights → finished map in 15 s</td><td>Visits; which video variant</td></tr>
+      <tr><td><strong>Pinterest</strong></td><td>Gift search in Nov–Dec; long shelf life</td><td>"Gift for travelers" pins linking to the Etsy listing and maker</td><td>Etsy visits from Pinterest</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>UTM link rules</h3>
+  <p>UTM tags are labels added to the end of a link so the analytics tool can tell which post sent a visitor. GoatCounter reads <code>utm_source</code> as the source; Plausible and Umami read all five tags. Rules: all lowercase, hyphens instead of spaces, never a person's name or data.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Tag</th><th>Meaning</th><th>Allowed values</th></tr></thead>
+    <tbody>
+      <tr><td><code>utm_source</code></td><td>Where</td><td><code>instagram</code> <code>threads</code> <code>facebook</code> <code>line</code> <code>tiktok</code> <code>pinterest</code> <code>etsy</code> <code>friends</code></td></tr>
+      <tr><td><code>utm_medium</code></td><td>How</td><td><code>bio</code> <code>story</code> <code>post</code> <code>reel</code> <code>group</code> <code>dm</code> <code>pin</code> <code>share</code> (from a maker's own share buttons) <code>email</code></td></tr>
+      <tr><td><code>utm_campaign</code></td><td>Why</td><td><code>holiday-2026</code> until Dec 31, then <code>evergreen</code></td></tr>
+      <tr><td><code>utm_content</code></td><td>Which version (optional)</td><td>Short label: <code>reel-routes-a</code>, <code>pin-gift-b</code></td></tr>
+    </tbody>
+  </table></div>
+  <pre><code>https://reby0318.github.io/flight-log-2026/make/?utm_source=instagram&amp;utm_medium=bio&amp;utm_campaign=holiday-2026</code></pre>
+  <p class="small muted">When analytics is wired in, the makers' own share buttons will add <code>utm_medium=share</code> and the platform as source, which is how M5 gets counted.</p>
+
+  <h3>Weekly scorecard</h3>
+  <p>Fill one row every Monday for the week before. Copy it into Google Sheets or Excel with the button; it pastes as columns.</p>
+  <div class="tbl"><table id="scorecard">
+    <thead><tr><th>Week of</th><th>Visitors (M1)</th><th>Started</th><th>Finished</th><th>Shares</th><th>Share visits</th><th>Notify</th><th>Etsy views</th><th>Orders (strangers)</th><th>Top source</th><th>One change made</th></tr></thead>
+    <tbody>
+      <tr><td class="num">Nov 9</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td class="num">Nov 16</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td class="num">Nov 23</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td class="num">Nov 30</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td class="num">Dec 7</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td class="num">Dec 14</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    </tbody>
+  </table></div>
+  <button class="copy" id="copyScore" type="button">Copy scorecard for Sheets</button>
+  <p class="small muted">Rates to compute in the sheet: Start rate = Started ÷ Visitors; Finish rate = Finished ÷ Started; Share rate = Shares ÷ Finished; Print interest = Notify ÷ Finished.</p>
+</section>
+
+<section id="legal">
+  <h2>5 · Legal notes</h2>
+  <div class="callout warn"><p>This is a plain-language checklist, not legal advice. Before taking real payments at scale, a short consult (many law schools run free clinics for student founders) is worth it.</p></div>
+
+  <h3>Privacy policy wording</h3>
+  <p>Add a short <code>/privacy.html</code> linked in every maker's footer. Starting text:</p>
+  <pre><code>Your flights, names and pictures stay in your browser. We never upload them.
+
+We count visits and button taps with GoatCounter, a privacy-friendly analytics
+service that uses no cookies and does not track you across sites. It records the
+page, the referring site, browser type, screen size and country. Your IP address
+is used briefly to estimate country and count unique visits, and is not stored.
+
+If you join the prints waitlist, we keep your email only to tell you about prints,
+send nothing else, and delete it on request. Every email has an unsubscribe link.
+Our email provider is [name]. Contact: [email or contact form link].
+
+We don't sell personal information. Last updated: [date].</code></pre>
+
+  <h3>Consent by region</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Region</th><th>Cookie-free analytics</th><th>Prints waitlist email</th></tr></thead>
+    <tbody>
+      <tr><td><strong>US</strong></td><td>No banner needed. Keep a privacy policy (California's CalOPPA requires one once you collect emails from Californians). CCPA/CPRA thresholds (e.g. $25M+ revenue) don't apply at this size.</td><td>Opt-in form is best practice. CAN-SPAM applies to every marketing email (below). Don't knowingly collect data from children under 13 (COPPA).</td></tr>
+      <tr><td><strong>EU / UK</strong> (GDPR, ePrivacy, UK PECR)</td><td>A tool that stores nothing on the device and keeps no personal profiles generally needs no consent banner. Name it in the privacy policy, with "legitimate interest" as the reason.</td><td>Needs clear, freely given consent: unticked box, says what you'll send. Honor access and deletion requests.</td></tr>
+      <tr><td><strong>Canada</strong> (CASL)</td><td>No banner needed for this setup.</td><td>Express consent before sending, plus your identity, contact information and an unsubscribe link in every email.</td></tr>
+      <tr><td><strong>Taiwan</strong> (PDPA)</td><td>No banner needed when nothing identifies a person.</td><td>When collecting the email, state who is collecting, the purpose, how long it's kept and the person's rights. Get consent for marketing and stop when asked.</td></tr>
+      <tr><td><strong>Japan</strong> (APPI)</td><td>No banner needed for this setup.</td><td>Publish the purpose of use. Tell people their data is stored by an overseas email provider.</td></tr>
+      <tr><td><strong>South Korea</strong> (PIPA)</td><td>No banner needed for this setup.</td><td>Strictest: separate consent for collection and for marketing, listing items, purpose and retention period, plus overseas-transfer disclosure. Simplest: one form that shows all of this, with checkboxes left unticked.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>CAN-SPAM checklist for any email list</h3>
+  <ul>
+    <li>Honest "From" name and subject line. No fake "Re:" or urgency.</li>
+    <li>Make clear when an email is promotional.</li>
+    <li>Include a valid postal address. A P.O. box or a registered private mailbox counts, so you don't need to publish your home address.</li>
+    <li>A working unsubscribe link in every email; honor it within 10 business days and never charge or ask for more data to unsubscribe.</li>
+    <li>You stay responsible if a helper or tool sends on your behalf.</li>
+  </ul>
+
+  <h3>Before selling prints</h3>
+  <ul>
+    <li><strong>Remove airline logos from anything you sell.</strong> The free Story designs show airline badges. Logos are trademarks, and selling them on posters invites takedowns. Use airport codes and plain text instead on paid products.</li>
+    <li>On Etsy, disclose your print partner as a production partner and use real mockups of the printed product.</li>
+    <li>Keep the waitlist honest: it's a waitlist, nothing is charged, and you only email about prints.</li>
+    <li>Etsy collects and remits sales tax for US marketplace orders. Sales you take directly (friends via payment apps) are on you, so keep a simple sales log for taxes.</li>
+  </ul>
+</section>
+
+<footer>
+  <p>Part of the Year in Maps business notes. Prices and terms checked Nov 6, 2026 from GoatCounter, Plausible and Umami's own sites. Etsy fees are from published 2026 seller-fee guides; confirm them in Etsy's fee schedule before listing.</p>
+  <p>Makers: <a href="https://reby0318.github.io/flight-log-2026/make/">Flight Log</a> · <a href="https://reby0318.github.io/us-travel-story/">US/World Travel Story</a> · <a href="https://reby0318.github.io/world-food-map-site/">World Food Map</a></p>
+</footer>
+</div>
+
+<script>
+document.getElementById('copyScore').addEventListener('click', function(){
+  var btn=this, rows=[...document.querySelectorAll('#scorecard tr')];
+  var tsv=rows.map(function(r){return [...r.children].map(function(c){return c.textContent.trim()}).join('\t')}).join('\n');
+  function done(t){btn.textContent=t; setTimeout(function(){btn.textContent='Copy scorecard for Sheets'},2000)}
+  try{
+    navigator.clipboard.writeText(tsv).then(function(){done('Copied')},function(){fallback()});
+  }catch(e){fallback()}
+  function fallback(){
+    var range=document.createRange(); range.selectNode(document.getElementById('scorecard'));
+    var s=getSelection(); s.removeAllRanges(); s.addRange(range); done('Selected: press Ctrl/Cmd+C');
+  }
+});
+</script>
+</body>
+</html>
