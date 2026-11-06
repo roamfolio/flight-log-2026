@@ -4,6 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Make Your Flight Log</title>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Flight Log Maker">
+<meta property="og:title" content="Make your flight log">
+<meta property="og:description" content="Turn your flights into a route map, badges, passport stamps and an Instagram Story.">
+<meta property="og:image" content="https://reby0318.github.io/flight-log-2026/make/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://reby0318.github.io/flight-log-2026/make/og.jpg">
+
 <meta name="description" content="Add your flights for any year and get an interactive flight log plus a 1080×1920 Instagram Story. No coding needed.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
 <script src="data.js"></script>
@@ -89,6 +99,7 @@ input[type=date], input[type=time] { min-height: 46px; }
 .btn.small { padding: 6px 12px; font-size: 13px; }
 .sharegroup { display: grid; gap: 6px; margin-top: 14px; }
 .sharegroup > b { font-size: 15px; }
+.sharegroup + .note { margin-top: 14px; }
 .or { margin: 4px 0 10px; font-size: 14px; font-weight: 600; color: var(--muted); }
 .mobilebar { display: none; }
 @media (max-width: 900px) {
@@ -177,8 +188,8 @@ input[type=date], input[type=time] { min-height: 46px; }
       </div>
       <div class="msg ok" id="status" role="status"></div>
       <div class="sharegroup">
-        <b>Post your Story picture</b>
-        <span class="note">On your phone, each button opens your share menu with the picture, so you can add it to your Instagram, Facebook or Threads Story or post, or send it on LINE.</span>
+        <b>Post to social media</b>
+        <span class="note">One click opens Facebook, Threads or LINE with a link to your flight log ready to post. Instagram only allows posting from its phone app: on your phone, tap Instagram and choose Story.</span>
         <div class="share" id="pictureBar"></div>
       </div>
       <div class="sharegroup">

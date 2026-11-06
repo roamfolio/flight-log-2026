@@ -130,28 +130,43 @@
     line: `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`,
   })[kind];
   const NAMES = { instagram: "Instagram", facebook: "Facebook", threads: "Threads", line: "LINE", email: "Email" };
-  const buttons = list => list.map(([k, n]) => `<button type="button" class="sh sh-${k}" data-sh="${k}">${n}</button>`).join("");
+  const ICON = {
+    instagram: '<rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.6"/><circle cx="16.9" cy="7.1" r="1" fill="currentColor" stroke="none"/>',
+    facebook: '<path transform="translate(12 12) scale(1.3) translate(-12 -12.6)" d="M13.5 20v-6.6h2.3l.4-2.7h-2.7V9c0-.8.3-1.4 1.4-1.4h1.4V5.2c-.3 0-1.1-.1-2.1-.1-2.1 0-3.4 1.2-3.4 3.5v2.1H8.4v2.7h2.4V20" fill="currentColor" stroke="none"/>',
+    threads: '<path d="M16.6 11.2c-.5-2.6-2.3-3.7-4.4-3.7-2.6 0-4.4 1.9-4.4 4.6 0 2.8 1.9 4.6 4.5 4.6 2.2 0 3.9-1.3 3.9-3.3 0-1.7-1.3-2.7-3.4-2.7-1.6 0-2.7.8-2.7 2 0 1.1.9 1.8 2.1 1.8 1.6 0 2.6-1.1 2.8-3.3"/><path d="M12.2 20c-4.9 0-7.7-3.1-7.7-8s2.9-8 7.7-8c3.6 0 6 1.6 7 4.6"/>',
+    line: '<path d="M12 4.5c-4.7 0-8 2.9-8 6.6 0 3.3 2.6 5.7 6.4 6.4l-.4 2.5 3.3-2.3c3.8-.3 6.7-3 6.7-6.6 0-3.7-3.3-6.6-8-6.6z"/><path d="M8 9.6v3.4h1.8M11 9.6V13M13 13V9.6l2.4 3.4V9.6" stroke-width="1.4"/>',
+    email: '<rect x="3.5" y="6" width="17" height="12" rx="2"/><path d="m4 7 8 6 8-6"/>',
+    copy: '<path d="M10 14a4 4 0 0 0 5.7 0l2.8-2.8a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-2.8 2.8a4 4 0 0 0 5.7 5.7l1-1"/>',
+    save: '<path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 19h14"/>',
+    more: '<circle cx="6" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="18" cy="12" r="1.4" fill="currentColor" stroke="none"/>',
+  };
+  const buttons = list => list.map(([k, n]) => `<button type="button" class="sh sh-${k}" data-sh="${k}" aria-label="${n.replace(/ ⬇$/, "")}"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k] || ""}</svg></span><span class="lb">${n.replace(/ ⬇$/, "")}</span></button>`).join("");
+  const setLabel = (b, t) => { const l = b.querySelector(".lb"); if (l) l.textContent = t; };
 
-  // 1) Post your Story picture: on a phone, the share menu with the picture; on a computer, save it and open the app's post window.
+  // 1) Post to social media in one click. Facebook, Threads and LINE open their own post window with a link to the log
+  //    (no saving). Instagram has no web posting, so on a phone it opens the share menu with the picture; on a computer it explains.
+  const mobile = () => /iPhone|iPad|Android/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent));
   window.flPictureBar = (el, { getBlob, fileName, info, say }) => {
-    el.innerHTML = buttons([["instagram", "Instagram"], ["facebook", "Facebook"], ["threads", "Threads"], ["line", "LINE"], ["save", "Save picture ⬇"]]);
+    el.innerHTML = buttons([["instagram", "Instagram"], ["facebook", "Facebook"], ["threads", "Threads"], ["line", "LINE"], ["save", "Save"]]);
+    // draw the picture ahead of time (when a finger or pointer reaches the buttons) so sharing it is instant
+    let ready = null, readyFor = "";
+    const prepare = () => { const key = info().url; if (readyFor !== key) { readyFor = key; ready = getBlob().then(b => new File([b], fileName(), { type: "image/png" })); ready.catch(() => { readyFor = ""; }); } return ready; };
+    ["pointerenter", "touchstart", "focusin"].forEach(ev => el.addEventListener(ev, () => { if (mobile()) prepare(); }, { passive: true }));
     el.addEventListener("click", async e => {
       const b = e.target.closest("[data-sh]"); if (!b || b.disabled) return;
-      const k = b.dataset.sh, label = b.textContent, { url, text } = info();
-      b.disabled = true; b.textContent = "Preparing…"; say("");
+      const k = b.dataset.sh, { url, text } = info(); say("");
+      if (k === "facebook" || k === "threads" || k === "line") { popup(linkTo(k, url, text)); say(`${NAMES[k]} opened with your flight log link ready to post.`); return; }
+      if (k === "instagram" && !mobile()) { say("Instagram only lets you post from its phone app. Open this page on your phone and tap Instagram, then choose Story."); return; }
+      const label = b.querySelector(".lb").textContent; b.disabled = true; setLabel(b, "Preparing…");
       try {
-        const file = new File([await getBlob()], fileName(), { type: "image/png" });
-        if (k !== "save" && canShareFile(file)) {
-          try { await navigator.share({ files: [file], text: `${text} ${url}` }); say(`Pick ${NAMES[k]} in the menu, then choose Story or Post.`); }
-          catch (err) { if (err.name !== "AbortError") say("Sharing was blocked; try Save picture instead."); }
-          return;
-        }
-        saveFile(file);
-        if (k === "save") say("Saved ✓ 1080 × 1920 PNG, the size of an Instagram or Facebook Story.");
-        else if (k === "instagram") say("Picture saved ✓ Instagram only takes new posts from its app: send the picture to your phone, then add it to your Story. Or open this page on your phone to share it directly.");
-        else { popup(linkTo(k, url, text)); say(`Picture saved ✓ In the ${NAMES[k]} window, attach the saved picture to your post.`); }
+        const file = await prepare();
+        if (k === "instagram") {
+          if (!canShareFile(file)) { saveFile(file); say("Picture saved ✓ Open Instagram and add it to your Story."); return; }
+          try { await navigator.share({ files: [file] }); say("Choose Instagram, then Story or Post."); }
+          catch (err) { if (err.name === "NotAllowedError") say("Your picture is ready. Tap Instagram again."); else if (err.name !== "AbortError") say("Sharing was blocked; try Save picture instead."); }
+        } else { saveFile(file); say("Saved ✓ 1080 × 1920 PNG, the size of an Instagram or Facebook Story."); }
       } catch (err) { say("Sorry, the picture couldn't be created in this browser. Try Chrome or Safari."); }
-      finally { b.disabled = false; b.textContent = label; }
+      finally { b.disabled = false; setLabel(b, label); }
     });
   };
 
@@ -168,9 +183,17 @@
       else popup(linkTo(k, url, text));
     });
   };
-  window.FL_SHARE_CSS = `.share{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.share .sh{font:600 13px var(--body,system-ui);border:0;border-radius:999px;padding:8px 14px;cursor:pointer;color:#fff}
-.sh-instagram{background:linear-gradient(45deg,#f9a03f,#e1306c 45%,#833ab4)}.sh-facebook{background:#1877f2}.sh-threads{background:#101010}
-.sh-line{background:#06c755}.sh-email{background:#5d6b82}.sh-save{background:#1d2b4a}.sh-copy{background:#e8a33a;color:#1d2b4a!important}.share .sh:disabled{opacity:.6;cursor:default}.sh-more{background:none;color:inherit!important;box-shadow:inset 0 0 0 1.5px currentColor}
-.share .sh:focus-visible{outline:2px solid #e8a33a;outline-offset:2px}`;
+  window.FL_SHARE_CSS = `.share{display:flex;flex-wrap:wrap;gap:14px 10px;align-items:flex-start}
+.share .sh{display:grid;justify-items:center;gap:6px;width:68px;padding:0;border:0;background:none;cursor:pointer;color:inherit;font:500 12px/1.2 var(--body,system-ui);text-align:center}
+.share .sh .ic{display:grid;place-items:center;width:50px;height:50px;border-radius:50%;color:#fff;box-shadow:0 1px 2px rgba(0,0,0,.08),0 6px 14px rgba(20,30,50,.12);transition:transform .15s ease,box-shadow .15s ease}
+.share .sh svg{width:24px;height:24px}
+.share .sh .lb{opacity:.82}
+.share .sh:hover .ic{transform:translateY(-2px);box-shadow:0 2px 4px rgba(0,0,0,.08),0 10px 20px rgba(20,30,50,.16)}
+.share .sh:focus-visible{outline:none}.share .sh:focus-visible .ic{outline:2px solid #e8a33a;outline-offset:3px}
+.share .sh:disabled{cursor:default}.share .sh:disabled .ic{opacity:.55}
+.sh-instagram .ic{background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fd5949 45%,#d6249f 60%,#285aeb 90%)}
+.sh-facebook .ic{background:#1877f2}.sh-threads .ic{background:#111}.sh-line .ic{background:#06c755}
+.sh-email .ic{background:#6b7a90}.sh-copy .ic{background:#e8a33a;color:#1d2b4a}.sh-save .ic{background:#1d2b4a}
+.sh-more .ic{background:transparent;color:inherit;box-shadow:inset 0 0 0 1.5px currentColor}
+@media (prefers-reduced-motion: reduce){.share .sh .ic{transition:none}}`;
 })();
