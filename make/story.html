@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>My Flight Story</title>
-<link rel="stylesheet" crossorigin="anonymous" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Bebas+Neue&family=Anton&family=Inter+Tight:wght@500;700;800&family=Special+Elite&family=IBM+Plex+Mono:wght@400;500;700&family=Big+Shoulders+Display:wght@700;900&display=swap">
+<link rel="stylesheet" crossorigin="anonymous" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Bebas+Neue&family=Anton&family=Inter+Tight:wght@500;700;800&family=Special+Elite&family=IBM+Plex+Mono:wght@400;500;700&family=Big+Shoulders+Display:wght@700;900&family=Shrikhand&family=Playfair+Display:ital,wght@0,900;1,700&display=swap">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
 <script src="../pictures/world-countries.js"></script>
@@ -95,6 +95,48 @@ const THEMES = {
       .passport { background: #fff; }
       .passport .hd, .passport .no { font-family: 'IBM Plex Mono'; letter-spacing: .3em; color: #8a8a86; }`,
     vars: { wall: "#f6f4ef", title: "#1d1d1f", hl: "#1d1d1f", hlInk: "#f6f4ef", tape1: "transparent", tape2: "transparent", pp: "#ffffff", rc: "#ffffff", eyeBg: "#1d1d1f", eyeInk: "#f6f4ef" } },
+  // ---- ten more looks ----
+  coastal: { ...MAPLIGHT, water: "#bfe0e3", land: "#fbf9f3", land2: "#ecebe2", coast: "#a3cdd1", state: "#d5e1dd", label: "#0f3b4c", contrail: "rgba(255,255,255,.75)", plane: "#ffffff",
+    vars: { wall: "linear-gradient(180deg, #e3f4f2 0%, #a7d8da 55%, #5aa6b4 100%)", title: "#0f3b4c", hl: "#fff7e8", hlInk: "#0f3b4c", tape1: "rgba(255,247,232,.7)", tape2: "rgba(90,166,180,.45)", pp: "#f2f7f6", rc: "#fffdf8", card: "#fffdf8", legendInk: "#0f3b4c" } },
+  sakura: { ...MAPLIGHT, water: "#e4eef4", land: "#fffafb", land2: "#f6e9ed", coast: "#e7c4cf", state: "#efd6de", label: "#5a2236", contrail: "rgba(179,58,94,.35)", plane: "#b33a5e", petals: true,
+    vars: { wall: "linear-gradient(180deg, #fdeaf0 0%, #f6c6d3 100%)", title: "#7a2944", hl: "#ffffff", hlInk: "#b33a5e", tape1: "rgba(255,255,255,.7)", tape2: "rgba(244,160,180,.6)", pp: "#fff5f7", rc: "#fffafb", card: "#fffafb", legendInk: "#5a2236", eyeInk: "#7a2944" } },
+  retro: { ...MAPLIGHT, water: "#cfe3df", land: "#fbf3e2", land2: "#efe2c6", coast: "#d8c49f", state: "#e3d2ae", label: "#5a2f20", labelHalo: "rgba(255,250,240,.9)", americana: true, contrail: "rgba(90,47,32,.35)", plane: "#5a2f20",
+    css: `h1 { font: 400 80px/1.02 'Shrikhand', cursive; } h1 span { font-family: 'Shrikhand', cursive; font-size: .62em; padding: 10px 20px 6px; }`,
+    vars: { wall: "linear-gradient(180deg, #f3e6c8 0 60%, #e8a23a 60% 68%, #d9662b 68% 76%, #a63d2a 76% 84%, #5a2f20 84% 100%)", title: "#5a2f20", hl: "#d9662b", hlInk: "#fff6e6", tape1: "rgba(232,162,58,.6)", tape2: "rgba(217,102,43,.45)", pp: "#fbf3e2", rc: "#fffaf0", card: "#fffaf0", legendInk: "#5a2f20" } },
+  darkroom: { ...MAPLIGHT, water: "#cfd2d4", land: "#f7f5f0", land2: "#e6e4de", coast: "#b9b6ae", state: "#d6d3cc", label: "#1a1a1a", contrail: "rgba(255,255,255,.3)", plane: "#f2efe8",
+    css: `.pg::before, .pg::after { content: ""; position: absolute; top: 0; bottom: 0; width: 22px; z-index: 1; background: repeating-linear-gradient(180deg, transparent 0 16px, rgba(255,255,255,.2) 16px 34px); }
+      .pg::before { left: 4px; } .pg::after { right: 4px; }
+      .mapcard { padding: 22px 22px 0 !important; }`,
+    vars: { wall: "radial-gradient(ellipse at 50% 30%, #2d2d2d, #0d0d0d 75%)", title: "#f2efe8", hl: "#d64933", hlInk: "#ffffff", tape1: "rgba(255,255,255,.2)", tape2: "rgba(214,73,51,.35)", pp: "#ecebe6", rc: "#f7f5f0", card: "#f7f5f0", eyeBg: "#d64933", eyeInk: "#ffffff" } },
+  forest: { ...MAPLIGHT, water: "#c9dcd2", land: "#f5f2e6", land2: "#e7e3d2", coast: "#b9c4a8", state: "#d7d8c2", label: "#1f3d2f", americana: true, contrail: "rgba(243,239,226,.5)", plane: "#f3efe2",
+    vars: { wall: "repeating-linear-gradient(135deg, rgba(255,255,255,.03) 0 3px, transparent 3px 9px), linear-gradient(180deg, #1f3d2f, #2f5a43)", title: "#f3efe2", hl: "#e9c46a", hlInk: "#1f3d2f", tape1: "rgba(233,196,106,.55)", tape2: "rgba(243,239,226,.3)", pp: "#eef0e6", rc: "#fbf8ee", card: "#fbf8ee", eyeBg: "#e9c46a", eyeInk: "#1f3d2f" } },
+  desert: { ...MAPLIGHT, water: "#d7e4e2", land: "#fbf1e4", land2: "#efdcc2", coast: "#d9b991", state: "#e8d0b0", label: "#5b2e1f", contrail: "rgba(91,46,31,.3)", plane: "#5b2e1f",
+    vars: { wall: "radial-gradient(circle at 18% 12%, rgba(255,236,190,.9) 0 70px, transparent 72px), linear-gradient(180deg, #f3d9b1 0%, #e9b98a 50%, #c97b54 100%)", title: "#5b2e1f", hl: "#5b2e1f", hlInk: "#f8e7cf", tape1: "rgba(255,244,226,.6)", tape2: "rgba(201,123,84,.45)", pp: "#fbf1e4", rc: "#fffaf2", card: "#fffaf2", legendInk: "#5b2e1f" } },
+  neon: { water: "#0f0b20", land: "#241b40", land2: "#1a1430", coast: "rgba(24,240,255,.4)", state: "rgba(255,63,164,.28)", halo: "rgba(7,6,15,.9)", label: "#ffffff", labelHalo: "rgba(7,6,15,.9)", dotFill: "#07060f", dotStroke: "#18f0ff",
+    glow: true, contrail: "rgba(24,240,255,.6)", plane: "#18f0ff",
+    css: `h1 { font: 400 108px/.95 'Bebas Neue', sans-serif; letter-spacing: .03em; text-shadow: 0 0 18px rgba(255,63,164,.7); }
+      h1 span { font-family: 'Bebas Neue', sans-serif; font-size: .6em; letter-spacing: .04em; }
+      .mapcard { box-shadow: 0 0 0 2px #ff3fa4, 0 0 44px rgba(255,63,164,.35) !important; }`,
+    vars: { wall: "radial-gradient(ellipse at 50% 0%, #2c1150, #07060f 70%)", title: "#ffffff", hl: "#ff3fa4", hlInk: "#07060f", tape1: "rgba(255,63,164,.45)", tape2: "rgba(24,240,255,.35)", pp: "#ece9f5", rc: "#f7f5fb", card: "#140f26", legendInk: "#ffffff", eyeBg: "#18f0ff", eyeInk: "#07060f" } },
+  lavender: { ...MAPLIGHT, water: "#e3e7fb", land: "#ffffff", land2: "#f1eefb", coast: "#cfc6ee", state: "#e2dcf6", label: "#3d2f73", contrail: "rgba(91,72,176,.35)", plane: "#5b48b0",
+    vars: { wall: "linear-gradient(160deg, #ece7ff 0%, #d9d1fb 45%, #f7d9ec 100%)", title: "#3d2f73", hl: "#ffffff", hlInk: "#5b48b0", tape1: "rgba(255,255,255,.7)", tape2: "rgba(201,183,255,.6)", pp: "#f7f5ff", rc: "#ffffff", card: "#ffffff", legendInk: "#3d2f73", eyeInk: "#3d2f73" } },
+  gazette: { ...MAPLIGHT, water: "#dcd8cc", land: "#fbf8f1", land2: "#ece6d8", coast: "#a9a394", state: "#cfc8b8", label: "#1a1a1a", labelHalo: "rgba(251,248,241,.9)", contrail: "transparent", plane: "transparent", noTape: true, flat: true,
+    font: "Playfair Display",
+    css: `h1 { font: 900 92px/.95 'Playfair Display', serif; letter-spacing: -.01em; transform: none; top: 40px; }
+      h1 span { display: block; margin: 8px 0 0; padding: 0; background: none; color: #1a1a1a; font: italic 700 .58em 'Playfair Display', serif; transform: none; border-radius: 0; }
+      h1 small { transform: none; box-shadow: none; background: none; color: #1a1a1a; border-radius: 0; padding: 8px 0; margin: 0 0 16px; border-top: 3px double #1a1a1a; border-bottom: 3px double #1a1a1a; font: 500 18px/1 'IBM Plex Mono'; letter-spacing: .3em; }
+      .legend div { font: 700 26px 'Playfair Display', serif; color: #1a1a1a; }
+      .ticket, .st { transform: none !important; }
+      .ticket { filter: none !important; box-shadow: 0 0 0 1.5px #1a1a1a; border-radius: 6px; top: 34px !important; height: 220px !important; }
+      .shield, .contrail { display: none; }
+      .passport .hd, .passport .no { font-family: 'IBM Plex Mono'; color: #6b665b; }`,
+    vars: { wall: "repeating-linear-gradient(0deg, rgba(0,0,0,.025) 0 1px, transparent 1px 4px), #efe9dc", title: "#1a1a1a", hl: "#1a1a1a", hlInk: "#efe9dc", tape1: "transparent", tape2: "transparent", pp: "#f7f3ea", rc: "#fbf8f1", card: "#fbf8f1", eyeBg: "transparent", eyeInk: "#1a1a1a", legendInk: "#1a1a1a" } },
+  blueprint: { water: "#1f4e8c", land: "#2f66ab", land2: "#295a99", coast: "rgba(255,255,255,.6)", state: "rgba(255,255,255,.3)", halo: "rgba(255,255,255,.85)", label: "#ffffff", labelHalo: "rgba(31,78,140,.9)", dotFill: "#1f4e8c", dotStroke: "#ffffff",
+    contrail: "rgba(255,255,255,.45)", plane: "#ffffff",
+    css: `h1 { font: 900 96px/.92 'Big Shoulders Display', sans-serif; letter-spacing: .02em; text-transform: uppercase; }
+      h1 span { font-family: 'Big Shoulders Display', sans-serif; font-size: .6em; }
+      .mapcard { box-shadow: 0 0 0 2px rgba(255,255,255,.55), 0 18px 34px rgba(0,0,0,.3) !important; }`,
+    vars: { wall: "linear-gradient(rgba(255,255,255,.09) 1px, transparent 1px) 0 0/40px 40px, linear-gradient(90deg, rgba(255,255,255,.09) 1px, transparent 1px) 0 0/40px 40px, #1d4a85", title: "#ffffff", hl: "#ffffff", hlInk: "#1d4a85", tape1: "rgba(255,255,255,.35)", tape2: "rgba(255,255,255,.25)", pp: "#eaf1fa", rc: "#f5f8fd", card: "#24548f", legendInk: "#ffffff", eyeBg: "#ffffff", eyeInk: "#1d4a85" } },
 };
 const T = THEMES[(S && S.style) || "americana"] || THEMES.americana;
 { const pg = document.getElementById("pg").style; Object.entries(T.vars).forEach(([k, v]) => pg.setProperty("--" + k, v)); }
@@ -103,6 +145,7 @@ const T = THEMES[(S && S.style) || "americana"] || THEMES.americana;
     + (T.noTape ? ".tape, .pin { display: none; }" : "")
     + (T.flat ? ".mapcard, .passport, .receipt { transform: none !important; box-shadow: 0 1px 0 rgba(0,0,0,.06), 0 10px 24px rgba(0,0,0,.06) !important; } .passport { border: 1px solid #e3e3de; }" : "");
   document.head.appendChild(css); }
+if (T.petals) document.getElementById("pg").insertAdjacentHTML("afterbegin", `<div style="position:absolute;inset:0">${Array.from({ length: 34 }, (_, i) => { const x = (i * 211 + 37) % 1060, y = (i * 389 + 61) % 1900, w = 14 + (i * 7) % 16, r = (i * 53) % 180; return `<i style="position:absolute;left:${x}px;top:${y}px;width:${w}px;height:${w * .62}px;border-radius:70% 0 70% 0;background:${i % 3 ? "#f7a9bd" : "#ffffff"};opacity:${.45 + (i % 4) * .12};transform:rotate(${r}deg)"></i>`; }).join("")}</div>`);
 if (T.stars) document.getElementById("pg").insertAdjacentHTML("afterbegin", `<div style="position:absolute;inset:0">${Array.from({ length: 70 }, (_, i) => { const x = (i * 197 + 53) % 1080, y = (i * 331 + 97) % 1920, r = 1 + (i * 7) % 3; return `<i style="position:absolute;left:${x}px;top:${y}px;width:${r}px;height:${r}px;border-radius:50%;background:#fff;opacity:${.25 + (i % 5) * .12}"></i>`; }).join("")}</div>`);
 const YEAR = LOG.year, AP = LOG.airports;
 const DEFAULT_COLORS = ["#E3132C", "#0B2A7A", "#F5A800", "#1FA0C0", "#2E8B57", "#0078D2", "#7a4bb3", "#c2410c", "#0f766e", "#be185d"];

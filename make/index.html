@@ -232,6 +232,16 @@ const STYLES = [
   ["night", "Night flight", "radial-gradient(ellipse at 50% 0%, #26396a, #0b1226 70%)", "#1a2539", "#e8a33a"],
   ["golden", "Golden hour", "linear-gradient(170deg, #f6c08f 0%, #ea8d6b 45%, #8f4a6a 100%)", "#fffaf3", "#fff8ee"],
   ["minimal", "Minimal", "#f6f4ef", "#ffffff", "#1d1d1f"],
+  ["coastal", "Coastal", "linear-gradient(180deg, #e3f4f2 0%, #a7d8da 55%, #5aa6b4 100%)", "#fffdf8", "#fff7e8"],
+  ["sakura", "Sakura", "linear-gradient(180deg, #fdeaf0 0%, #f6c6d3 100%)", "#fffafb", "#b33a5e"],
+  ["retro", "Retro '70s", "linear-gradient(180deg, #f3e6c8 0 60%, #e8a23a 60% 68%, #d9662b 68% 76%, #a63d2a 76% 84%, #5a2f20 84% 100%)", "#fffaf0", "#d9662b"],
+  ["darkroom", "Darkroom", "radial-gradient(ellipse at 50% 30%, #2d2d2d, #0d0d0d 75%)", "#f7f5f0", "#d64933"],
+  ["forest", "Forest", "linear-gradient(180deg, #1f3d2f, #2f5a43)", "#fbf8ee", "#e9c46a"],
+  ["desert", "Desert", "linear-gradient(180deg, #f3d9b1 0%, #e9b98a 50%, #c97b54 100%)", "#fffaf2", "#5b2e1f"],
+  ["neon", "Neon Tokyo", "radial-gradient(ellipse at 50% 0%, #2c1150, #07060f 70%)", "#140f26", "#ff3fa4"],
+  ["lavender", "Lavender", "linear-gradient(160deg, #ece7ff 0%, #d9d1fb 45%, #f7d9ec 100%)", "#ffffff", "#5b48b0"],
+  ["gazette", "Gazette", "#efe9dc", "#fbf8f1", "#1a1a1a"],
+  ["blueprint", "Blueprint", "linear-gradient(rgba(255,255,255,.12) 1px, transparent 1px) 0 0/10px 10px, linear-gradient(90deg, rgba(255,255,255,.12) 1px, transparent 1px) 0 0/10px 10px, #1d4a85", "#24548f", "#ffffff"],
 ];
 // restore from a shared link or the last visit
 try { const h = /[?#&]a=([^&#]+)/.exec(location.search + location.hash); const saved = h ? flDecode(decodeURIComponent(h[1])) : JSON.parse(localStorage.getItem("my-flight-log") || "null"); if (saved && Array.isArray(saved.flights)) S = { ...S, ...saved }; } catch (e) {}
