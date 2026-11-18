@@ -101,7 +101,7 @@ footer { font-size: 13px; color: var(--muted); }
       <div class="eyebrow" id="who">Flight log</div>
       <h1>All my <span>flights</span></h1>
     </div>
-    <div class="sync" id="sync"><i></i>Updates every day from booking emails</div>
+    <div class="sync" id="sync"><i></i>Updates twice a day from booking emails</div>
     <div class="board" id="board"></div>
     <div class="chips" id="chips" role="group" aria-label="Show flights from"></div>
   </header>
@@ -169,7 +169,7 @@ const loadYear = y => new Promise(res => {
   try {
     const st = await (await fetch(`../automation/state.json?v=${Date.now()}`)).json();
     const t = new Date(st.lastChecked);
-    if (!isNaN(t)) document.getElementById("sync").innerHTML = `<i></i>Checked booking emails ${t.toLocaleDateString("en-US", { month: "short", day: "numeric" })}, ${t.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })} · updates every day`;
+    if (!isNaN(t)) document.getElementById("sync").innerHTML = `<i></i>Checked booking emails ${t.toLocaleDateString("en-US", { month: "short", day: "numeric" })}, ${t.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })} · updates twice a day`;
   } catch (e) {}
 
   /* ---------- year chips ---------- */
@@ -276,7 +276,7 @@ const loadYear = y => new Promise(res => {
     const el = document.getElementById("list");
     if (!F.length) { el.innerHTML = `<div class="empty">No flights for this year yet. They appear here as soon as a booking email arrives.</div>`; return; }
     const byYear = {}; F.forEach(f => (byYear[f.year] = byYear[f.year] || []).push(f));
-    el.innerHTML = Object.keys(byYear).sort((a, b) => b - a).map(y => `<div class="ygroup"><h3>${y} · ${byYear[y].length} FLIGHTS</h3>${byYear[y].slice().reverse().map(f => `
+    el.innerHTML = Object.keys(byYear).sort((a, b) => b - a).map(y => `<div class="ygroup"><h3>${y} · ${byYear[y].length} FLIGHT${byYear[y].length === 1 ? "" : "S"}</h3>${byYear[y].slice().reverse().map(f => `
       <div class="fl"><div class="dt">${MON[f.date.getMonth()].toUpperCase()}<b>${f.date.getDate()}</b></div>${logo(f.air)}
         <div style="min-width:0"><div class="rt">${f.from} → ${f.to}</div><div class="meta">${f.air}${f.no ? " · " + f.no : ""}${f.t ? " · " + f.t : ""} · ${fmt(f.mi)} mi${f.note ? " · " + f.note : ""}</div></div>
         <span class="tag ${f.up ? "up" : "flown"}">${f.up ? "Upcoming" : "Flown"}</span></div>`).join("")}</div>`).join("");
