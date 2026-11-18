@@ -14,4 +14,6 @@ See the comment at the top of any `YEAR/flights.js`. Airports need `lat`, `lon` 
 
 ## Check-in file
 
+The task runs twice a day (8 AM and 6 PM). It also keeps `years.js` current, so the All my flights page (`all/`) picks up each new year.
+
 `automation/state.json` records the last time the task ran, so each run only reads new email.

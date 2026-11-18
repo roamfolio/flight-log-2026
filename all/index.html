@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>All My Flights</title>
+<meta name="description" content="Every flight since 2026, updated automatically from booking emails, with a recap for each year.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<script src="../pictures/us-states.js"></script>
+<script src="../pictures/world-countries.js"></script>
+<script>window.LOGO_BASE = "../pictures/logos-official/";</script>
+<script src="../pictures/logos.js"></script>
+<script src="../make/data.js"></script>
+<script src="../years.js"></script>
+<style>
+/* Layout: logbook header with lifetime totals and year chips, then the route map beside highlights,
+   a recap card per year, and the full flight timeline. Same look as the yearly logs. */
+:root {
+  --bg: #eef1f5; --surface: #ffffff; --ink: #1d2b4a; --muted: #5d6a82; --line: #d6dce5;
+  --amber: #e8a33a; --amber-ink: #8a5a12; --land: #f6f4ee; --land2: #ebe8df; --ocean: #dbe6ef; --up: #b8641a;
+  --display: "Big Shoulders Display", Impact, "Arial Narrow", sans-serif; --body: "IBM Plex Sans", system-ui, sans-serif; --mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #0e1524; --surface: #151f33; --ink: #e6ebf3; --muted: #95a2bb; --line: #2a3752; --amber-ink: #f2c06d; --land: #1d2940; --land2: #151e31; --ocean: #0a1120; --up: #f2a65a; color-scheme: dark; } }
+:root[data-theme="dark"] { --bg: #0e1524; --surface: #151f33; --ink: #e6ebf3; --muted: #95a2bb; --line: #2a3752; --amber-ink: #f2c06d; --land: #1d2940; --land2: #151e31; --ocean: #0a1120; --up: #f2a65a; color-scheme: dark; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 15px/1.5 var(--body); }
+.wrap { max-width: 1180px; margin: 0 auto; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 28px; }
+a { color: inherit; }
+.top { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 14px; color: var(--muted); }
+.top a { text-decoration: none; } .top a:hover { color: var(--ink); }
+header { display: grid; gap: 16px; }
+.eyebrow { font: 500 12px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+h1 { font: 800 clamp(44px, 8vw, 84px)/.9 var(--display); text-transform: uppercase; margin: 4px 0 0; letter-spacing: .01em; }
+h1 span { color: var(--amber-ink); }
+h2 { font: 600 26px/1 var(--display); text-transform: uppercase; letter-spacing: .02em; margin: 0; }
+.sync { display: inline-flex; align-items: center; gap: 8px; font: 500 12px var(--mono); letter-spacing: .04em; color: var(--muted); }
+.sync i { width: 8px; height: 8px; border-radius: 50%; background: #2e8b57; box-shadow: 0 0 0 3px rgba(46,139,87,.18); }
+.board { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.cell { background: var(--surface); padding: 12px 14px; display: grid; gap: 2px; }
+.cell .k { font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.cell .v { font: 800 34px/1 var(--display); font-variant-numeric: tabular-nums; }
+.cell .s { font-size: 12px; color: var(--muted); }
+.cell.next .v { color: var(--amber-ink); }
+@media (max-width: 640px) { .cell.next { grid-column: 1 / -1; } }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { font: 600 14px var(--body); color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; cursor: pointer; }
+.chip small { font: 500 12px var(--mono); color: var(--muted); margin-left: 4px; }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.chip[aria-pressed="true"] small { color: inherit; opacity: .7; }
+.chip:focus-visible, .btn:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+.main { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+@media (max-width: 860px) { .main { grid-template-columns: 1fr; } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+svg#map { display: block; width: 100%; height: auto; border-radius: 8px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; padding: 10px 4px 0; font-size: 12px; color: var(--muted); }
+.legend i { display: inline-block; width: 18px; height: 0; border-top: 4px solid; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
+.arc { fill: none; stroke-width: 3.5; stroke-linecap: round; }
+.arc.up { stroke-dasharray: 7 6; }
+.hl { display: grid; gap: 10px; }
+.hl div { display: grid; gap: 2px; padding-bottom: 10px; border-bottom: 1px dashed var(--line); }
+.hl div:last-child { border-bottom: 0; padding-bottom: 0; }
+.hl .k { font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.hl b { font: 800 24px/1.05 var(--display); text-transform: uppercase; letter-spacing: .01em; }
+.hl span { font-size: 13px; color: var(--muted); }
+.years { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.year { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: grid; gap: 10px; align-content: start; }
+.year .yr { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.year .yr b { font: 800 44px/1 var(--display); }
+.year .yr span { font: 500 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.year .yr span.live { color: var(--up); }
+.year p { margin: 0; color: var(--muted); font-size: 14px; }
+.year .acts { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { font: 600 13px var(--body); text-decoration: none; border-radius: 999px; padding: 8px 14px; border: 1.5px solid var(--line); color: var(--ink); background: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.btn.pri { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.btn.amb { background: var(--amber); color: #1d2b4a; border-color: var(--amber); }
+.listhead { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.list { display: grid; gap: 18px; }
+.ygroup { display: grid; gap: 8px; }
+.ygroup > h3 { margin: 0; font: 600 13px var(--mono); letter-spacing: .14em; color: var(--muted); }
+.fl { display: grid; grid-template-columns: 54px auto minmax(0, 1fr) auto; gap: 12px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; }
+.fl .dt { text-align: center; font: 500 11px var(--mono); color: var(--muted); line-height: 1.2; }
+.fl .dt b { display: block; font: 800 24px/1 var(--display); color: var(--ink); }
+.fl .rt { font: 800 22px/1 var(--display); letter-spacing: .02em; }
+.fl .meta { font-size: 13px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tag { font: 600 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; border-radius: 999px; padding: 4px 9px; border: 1px solid currentColor; white-space: nowrap; }
+.tag.flown { color: var(--muted); }
+.tag.up { color: var(--up); }
+@media (max-width: 560px) { .fl { grid-template-columns: 46px minmax(0, 1fr) auto; } .fl .logo { display: none !important; } }
+.empty { color: var(--muted); font-size: 14px; border: 1.5px dashed var(--line); border-radius: 10px; padding: 14px; text-align: center; }
+footer { font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><a href="../">← 2026 flight log</a><a href="../make/">Make your own flight log →</a></div>
+  <header>
+    <div>
+      <div class="eyebrow" id="who">Flight log</div>
+      <h1>All my <span>flights</span></h1>
+    </div>
+    <div class="sync" id="sync"><i></i>Updates every day from booking emails</div>
+    <div class="board" id="board"></div>
+    <div class="chips" id="chips" role="group" aria-label="Show flights from"></div>
+  </header>
+
+  <section class="main">
+    <div class="card"><svg id="map" viewBox="0 0 910 600" role="img" aria-label="Map of every route flown"></svg><div class="legend" id="legend"></div></div>
+    <div class="card hl" id="highlights"></div>
+  </section>
+
+  <section style="display:grid;gap:12px">
+    <h2>Year recaps</h2>
+    <div class="years" id="years"></div>
+  </section>
+
+  <section style="display:grid;gap:12px">
+    <div class="listhead"><h2>Every flight</h2><button class="btn" id="csv" type="button">Download all flights (CSV) ⬇</button></div>
+    <div class="list" id="list"></div>
+  </section>
+
+  <footer>Flights are added, changed or removed automatically when booking, schedule-change or cancellation emails arrive. A flight turns "flown" after it lands. Distances are great-circle miles. No booking codes, prices or card details are ever stored here.</footer>
+</div>
+
+<script>
+/* ---------- load every year's flights.js (each one sets window.FLIGHT_LOG) ---------- */
+const loadYear = y => new Promise(res => {
+  const s = document.createElement("script"); s.src = `../${y}/flights.js?v=${Date.now()}`;
+  s.onload = () => { const L = window.FLIGHT_LOG; window.FLIGHT_LOG = null; res(L && L.year === y ? L : null); };
+  s.onerror = () => res(null);
+  document.head.appendChild(s);
+});
+
+(async () => {
+  const LOGS = [];
+  for (const y of (window.FLIGHT_YEARS || [])) { const L = await loadYear(y); if (L) LOGS.push(L); }
+  const AIRPORTS = {}, AIRLINES = {};
+  LOGS.forEach(L => { Object.assign(AIRPORTS, L.airports); Object.assign(AIRLINES, L.airlines); });
+  const NAME = (LOGS.find(L => L.name) || {}).name || "";
+  const MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const fmt = n => Math.round(n).toLocaleString("en-US");
+  const miles = (a, b) => { const r = Math.PI / 180, R = 3958.8, dLa = (b.lat - a.lat) * r, dLo = (b.lon - a.lon) * r; const h = Math.sin(dLa / 2) ** 2 + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dLo / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(h)); };
+  const mins = s => { const r = /(\d+):(\d+)\s*(AM|PM)/.exec(s || ""); if (!r) return null; let h = +r[1] % 12; if (r[3] === "PM") h += 12; return h * 60 + +r[2]; };
+  const nthSunday = (y, m, n) => { const d = new Date(Date.UTC(y, m, 1)); return Date.UTC(y, m, 1 + ((7 - d.getUTCDay()) % 7) + 7 * (n - 1)); };
+  // a flight is "flown" once it has landed (arrival airport's local time)
+  function landedAt(f) {
+    const [y, m, d] = f.d.split("-").map(Number), [depS, arrS] = (f.t || "").split("→");
+    const dep = mins(depS); let arr = mins(arrS), plus = 0;
+    if (arr === null) arr = dep !== null ? dep + 240 : 23 * 60 + 59; else if (dep !== null && arr < dep) plus = 1;
+    const a = AIRPORTS[f.to] || {}, day = Date.UTC(y, m - 1, d + plus), dst = a.dst !== false && day >= nthSunday(y, 2, 2) && day < nthSunday(y, 10, 1);
+    return new Date(Date.UTC(y, m - 1, d + plus, 0, arr + ((a.tz ?? 8) - (dst ? 1 : 0)) * 60));
+  }
+  const NOW = new Date(), today = new Date(NOW); today.setHours(0, 0, 0, 0);
+  const ALL = LOGS.flatMap(L => L.flights.map(f => ({ ...f, year: L.year })))
+    .filter(f => AIRPORTS[f.from] && AIRPORTS[f.to])
+    .sort((a, b) => (a.d + (mins((a.t || "").split("→")[0]) ?? 0)).localeCompare(b.d + (mins((b.t || "").split("→")[0]) ?? 0)));
+  ALL.forEach(f => { const [y, m, d] = f.d.split("-").map(Number); f.date = new Date(y, m - 1, d); f.mi = miles(AIRPORTS[f.from], AIRPORTS[f.to]); f.up = landedAt(f) > NOW; });
+  const COLORS = ["#E3132C", "#0B2A7A", "#F5A800", "#1FA0C0", "#2E8B57", "#0078D2", "#7a4bb3", "#c2410c", "#0f766e", "#be185d"];
+  const color = air => (AIRLINES[air] || {}).color || COLORS[[...new Set(ALL.map(f => f.air))].indexOf(air) % COLORS.length];
+  const code = air => (AIRLINES[air] || {}).code;
+  const logo = air => window.LOGO_SRC && LOGO_SRC[code(air)] ? LOGO_PILL(code(air), 26, 86) : `<span class="logo" style="font:600 12px var(--body);color:var(--muted);width:86px;text-align:center">${air}</span>`;
+  const first = NAME.trim().split(/\s+/)[0];
+  document.getElementById("who").textContent = NAME ? `${NAME} · Every flight since ${LOGS[0] ? LOGS[0].year : ""}` : "Every flight";
+  if (first) document.title = `All of ${first}'s Flights`;
+
+  // last automatic update (the daily email sync writes this)
+  try {
+    const st = await (await fetch(`../automation/state.json?v=${Date.now()}`)).json();
+    const t = new Date(st.lastChecked);
+    if (!isNaN(t)) document.getElementById("sync").innerHTML = `<i></i>Checked booking emails ${t.toLocaleDateString("en-US", { month: "short", day: "numeric" })}, ${t.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })} · updates every day`;
+  } catch (e) {}
+
+  /* ---------- year chips ---------- */
+  let sel = "all";
+  try { const h = location.hash.slice(1); if (/^\d{4}$/.test(h)) sel = h; } catch (e) {}
+  const years = LOGS.map(L => L.year);
+  function drawChips() {
+    document.getElementById("chips").innerHTML = [["all", "All years", ALL.length]].concat(years.map(y => [String(y), y, ALL.filter(f => f.year === y).length]))
+      .map(([k, n, c]) => `<button class="chip" type="button" data-y="${k}" aria-pressed="${sel === k}">${n}<small>${c}</small></button>`).join("");
+  }
+  document.getElementById("chips").addEventListener("click", e => { const b = e.target.closest("[data-y]"); if (!b) return; sel = b.dataset.y; try { history.replaceState(null, "", sel === "all" ? location.pathname : "#" + sel); } catch (err) {} render(); });
+
+  /* ---------- render everything for the selected years ---------- */
+  function render() {
+    drawChips();
+    const F = sel === "all" ? ALL : ALL.filter(f => String(f.year) === sel);
+    const flown = F.filter(f => !f.up), up = F.filter(f => f.up);
+    const used = [...new Set(F.flatMap(f => [f.from, f.to]))], airs = [...new Set(F.map(f => f.air))];
+    const next = ALL.find(f => f.up);
+    const days = next ? Math.round((next.date - today) / 864e5) : 0;
+    document.getElementById("board").innerHTML = `
+      <div class="cell"><span class="k">Flights</span><span class="v">${F.length}</span><span class="s">${flown.length} flown · ${up.length} upcoming</span></div>
+      <div class="cell"><span class="k">Miles</span><span class="v">${fmt(F.reduce((s, f) => s + f.mi, 0))}</span><span class="s">${(F.reduce((s, f) => s + f.mi, 0) / 24901).toFixed(2)}× around the Earth</span></div>
+      <div class="cell"><span class="k">Airlines</span><span class="v">${airs.length}</span><span class="s">${airs.slice(0, 3).join(", ")}${airs.length > 3 ? "…" : ""}</span></div>
+      <div class="cell"><span class="k">Airports</span><span class="v">${used.length}</span><span class="s">${used.join(" · ")}</span></div>
+      <div class="cell next"><span class="k">Next flight</span><span class="v">${next ? (days <= 0 ? "Today" : days === 1 ? "1 day" : days + " days") : "—"}</span><span class="s">${next ? `${MON[next.date.getMonth()]} ${next.date.getDate()}, ${next.date.getFullYear()} · ${next.from} → ${next.to}` : "Nothing booked yet"}</span></div>`;
+    drawMap(F, used);
+    drawHighlights(F);
+    drawYears();
+    drawList(F);
+  }
+
+  /* ---------- map ---------- */
+  function drawMap(F, used) {
+    const svg = d3.select("#map"); svg.selectAll("*").remove();
+    const W = 910, H = 600, ll = (used.length ? used : ["SEA", "SFO"]).filter(c => AIRPORTS[c]).map(c => [AIRPORTS[c].lon, AIRPORTS[c].lat]);
+    let lon0 = Math.min(...ll.map(p => p[0])), lon1 = Math.max(...ll.map(p => p[0])), lat0 = Math.min(...ll.map(p => p[1])), lat1 = Math.max(...ll.map(p => p[1]));
+    const pl = Math.max(4, (lon1 - lon0) * .2), pa = Math.max(3, (lat1 - lat0) * .22); lon0 -= pl; lon1 += pl; lat0 -= pa; lat1 += pa;
+    const wide = lon1 - lon0 > 90 || lat1 - lat0 > 55;
+    const proj = (wide ? d3.geoNaturalEarth1() : d3.geoConicConformal().parallels([lat0 + (lat1 - lat0) / 3, lat1 - (lat1 - lat0) / 3])).rotate([-(lon0 + lon1) / 2, 0])
+      .fitExtent([[16, 16], [W - 16, H - 16]], { type: "MultiPoint", coordinates: [[lon0, lat0], [lon1, lat0], [lon1, lat1], [lon0, lat1], [(lon0 + lon1) / 2, lat1]] });
+    const path = d3.geoPath(proj);
+    svg.append("rect").attr("width", W).attr("height", H).attr("fill", "var(--ocean)");
+    svg.append("g").selectAll("path").data(topojson.feature(WORLD, WORLD.objects.countries).features).join("path").attr("d", path).attr("fill", d => d.id === "840" ? "var(--land)" : "var(--land2)").attr("stroke", "var(--line)");
+    svg.append("path").attr("d", path(topojson.mesh(US, US.objects.states, (a, b) => a !== b))).attr("fill", "none").attr("stroke", "var(--line)");
+    const pt = c => proj([AIRPORTS[c].lon, AIRPORTS[c].lat]), groups = {};
+    F.forEach(f => {
+      const key = [f.from, f.to].sort().join("-"), n = (groups[key] = (groups[key] || 0) + 1) - 1;
+      const [A, B] = key.split("-").map(pt), dx = B[0] - A[0], dy = B[1] - A[1], len = Math.hypot(dx, dy) || 1, side = n % 2 ? 1 : -1, k = .12 + .05 * Math.floor(n / 2);
+      const C = [(A[0] + B[0]) / 2 - dy / len * k * len * side, (A[1] + B[1]) / 2 + dx / len * k * len * side];
+      svg.append("path").attr("d", `M${A} Q${C} ${B}`).attr("class", "arc" + (f.up ? " up" : "")).attr("stroke", color(f.air)).attr("opacity", .9)
+        .append("title").text(`${MON[f.date.getMonth()]} ${f.date.getDate()}, ${f.date.getFullYear()} · ${f.from} → ${f.to} · ${f.air}`);
+    });
+    const P = used.filter(c => AIRPORTS[c]).map(c => ({ c, p: pt(c) }));
+    P.forEach(({ c, p: [x, y] }) => {
+      // a close neighbour to the east pushes this label to the left; one just above/below shifts it down
+      const near = P.find(q => q.c !== c && Math.hypot(q.p[0] - x, q.p[1] - y) < 60), left = x > W - 80 || (near && near.p[0] > x), dy = near && !left && near.p[1] < y ? 22 : -8;
+      svg.append("circle").attr("cx", x).attr("cy", y).attr("r", 6).attr("fill", "var(--surface)").attr("stroke", "var(--ink)").attr("stroke-width", 2.5);
+      svg.append("text").attr("x", x + (left ? -10 : 10)).attr("y", y + dy).attr("text-anchor", left ? "end" : "start").attr("fill", "var(--ink)").attr("font-family", "var(--display)").attr("font-weight", 800).attr("font-size", 22).attr("paint-order", "stroke").attr("stroke", "var(--surface)").attr("stroke-width", 4).text(c);
+    });
+    const airs = [...new Set(F.map(f => f.air))];
+    document.getElementById("legend").innerHTML = airs.map(a => `<span><i style="border-color:${color(a)}"></i>${a}</span>`).join("") + (F.some(f => f.up) ? `<span><i style="border-top-style:dashed;border-color:var(--muted)"></i>Upcoming</span>` : "");
+  }
+
+  /* ---------- highlights ---------- */
+  function drawHighlights(F) {
+    const el = document.getElementById("highlights");
+    if (!F.length) { el.innerHTML = `<div><span class="k">Highlights</span><b>No flights yet</b><span>They appear here as soon as a booking email arrives.</span></div>`; return; }
+    const count = (arr, key) => { const m = {}; arr.forEach(x => { const k = key(x); m[k] = (m[k] || 0) + 1; }); return Object.entries(m).sort((a, b) => b[1] - a[1]); };
+    const route = count(F, f => [f.from, f.to].sort().join(" ⇄ "))[0], air = count(F, f => f.air)[0];
+    const home = count(F.flatMap(f => [f.from, f.to]), x => x)[0], long = F.reduce((a, b) => b.mi > a.mi ? b : a);
+    const red = F.filter(f => { const m = mins((f.t || "").split("→")[0]); return m !== null && (m >= 22 * 60 || m < 4 * 60); }).length;
+    const month = count(F, f => `${MON[f.date.getMonth()]} ${f.date.getFullYear()}`)[0];
+    el.innerHTML = `
+      <div><span class="k">Most-flown route</span><b>${route[0]}</b><span>${route[1]} flight${route[1] > 1 ? "s" : ""}</span></div>
+      <div><span class="k">Top airline</span><b>${air[0]}</b><span>${air[1]} of ${F.length} flights</span></div>
+      <div><span class="k">Home airport</span><b>${home[0]}</b><span>${AIRPORTS[home[0]].city}, on ${home[1]} flights</span></div>
+      <div><span class="k">Longest flight</span><b>${long.from} → ${long.to}</b><span>${fmt(long.mi)} miles · ${MON[long.date.getMonth()]} ${long.date.getDate()}, ${long.date.getFullYear()}</span></div>
+      <div><span class="k">Busiest month</span><b>${month[0]}</b><span>${month[1]} flights${red ? ` · ${red} red-eye${red > 1 ? "s" : ""} overall` : ""}</span></div>`;
+  }
+
+  /* ---------- a recap card per year: open the log, the Story picture, the animated story ---------- */
+  const to24 = s => { const m = mins(s); return m === null ? "" : `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`; };
+  const answers = y => ({ year: y, name: NAME, style: "americana", flights: ALL.filter(f => f.year === y).map(f => { const [a, b] = (f.t || "").split("→"); return { d: f.d, from: f.from, to: f.to, air: f.air, no: f.no || "", dep: to24(a), arr: to24(b) }; }) });
+  function drawYears() {
+    const thisYear = new Date().getFullYear();
+    document.getElementById("years").innerHTML = LOGS.map(L => {
+      const y = L.year, F = ALL.filter(f => f.year === y), mi = F.reduce((s, f) => s + f.mi, 0), up = F.filter(f => f.up).length;
+      const status = !F.length ? "No flights yet" : up ? `${up} upcoming` : y < thisYear || !up ? "Complete" : "";
+      const enc = F.length && window.flEncode ? flEncode(answers(y)) : "";
+      const is2026 = y === 2026;
+      const log = is2026 ? "../" : `../${y}/`, story = is2026 ? "../story.html" : `../make/anim.html?a=${enc}`;
+      const pic = is2026 ? `<a class="btn amb" href="../pictures/final/2026-dec20-story.png" download="2026-flights-story.png">Story picture ⬇</a>` : enc ? `<a class="btn amb" href="../make/view.html?a=${enc}#story">Story picture</a>` : "";
+      return `<article class="year">
+        <div class="yr"><b>${y}</b><span class="${up ? "live" : ""}">${status}</span></div>
+        <p>${F.length} flight${F.length === 1 ? "" : "s"} · ${fmt(mi)} miles · ${new Set(F.map(f => f.air)).size} airline${new Set(F.map(f => f.air)).size === 1 ? "" : "s"}</p>
+        <div class="acts"><a class="btn pri" href="${log}">Open ${y} flight log →</a>${pic}${F.length ? `<a class="btn" href="${story}">▶ Animated story</a>` : ""}</div>
+      </article>`;
+    }).join("");
+  }
+
+  /* ---------- timeline ---------- */
+  function drawList(F) {
+    const el = document.getElementById("list");
+    if (!F.length) { el.innerHTML = `<div class="empty">No flights for this year yet. They appear here as soon as a booking email arrives.</div>`; return; }
+    const byYear = {}; F.forEach(f => (byYear[f.year] = byYear[f.year] || []).push(f));
+    el.innerHTML = Object.keys(byYear).sort((a, b) => b - a).map(y => `<div class="ygroup"><h3>${y} · ${byYear[y].length} FLIGHTS</h3>${byYear[y].slice().reverse().map(f => `
+      <div class="fl"><div class="dt">${MON[f.date.getMonth()].toUpperCase()}<b>${f.date.getDate()}</b></div>${logo(f.air)}
+        <div style="min-width:0"><div class="rt">${f.from} → ${f.to}</div><div class="meta">${f.air}${f.no ? " · " + f.no : ""}${f.t ? " · " + f.t : ""} · ${fmt(f.mi)} mi${f.note ? " · " + f.note : ""}</div></div>
+        <span class="tag ${f.up ? "up" : "flown"}">${f.up ? "Upcoming" : "Flown"}</span></div>`).join("")}</div>`).join("");
+  }
+
+  /* ---------- CSV of every flight ---------- */
+  document.getElementById("csv").addEventListener("click", () => {
+    const q = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
+    const rows = [["Date", "From", "From city", "To", "To city", "Airline", "Flight", "Times (local)", "Miles", "Status", "Note"]]
+      .concat(ALL.map(f => [f.d, f.from, AIRPORTS[f.from].city, f.to, AIRPORTS[f.to].city, f.air, f.no || "", f.t || "", Math.round(f.mi), f.up ? "Upcoming" : "Flown", f.note || ""]));
+    const blob = new Blob(["﻿" + rows.map(r => r.map(q).join(",")).join("\n")], { type: "text/csv" });
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "all-my-flights.csv"; document.body.appendChild(a); a.click(); a.remove();
+  });
+
+  render();
+  // refresh after the next landing so "upcoming" turns "flown" on its own
+  const nextLanding = ALL.map(landedAt).filter(t => t > NOW).sort((a, b) => a - b)[0];
+  if (nextLanding) setTimeout(() => location.reload(), Math.min(nextLanding - NOW + 60000, 6 * 3600e3));
+})();
+</script>
+</body>
+</html>

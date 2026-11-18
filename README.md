@@ -1,10 +1,13 @@
 # 2026 in the Air
 
 ### ▶ See it live: **[roamfolio.github.io/flight-log-2026](https://roamfolio.github.io/flight-log-2026/)**
+### 🗺 All my flights (every year, updated from email): **[roamfolio.github.io/flight-log-2026/all](https://roamfolio.github.io/flight-log-2026/all/)**
 ### ✈ Make your own: **[roamfolio.github.io/flight-log-2026/make](https://roamfolio.github.io/flight-log-2026/make/)**
 
 **Live pages:** [2026 flight log + story](https://roamfolio.github.io/flight-log-2026/) · [Make your own flight log + Story](https://roamfolio.github.io/flight-log-2026/make/) · [2026 story](https://roamfolio.github.io/flight-log-2026/story.html) · [2027 flight log](https://roamfolio.github.io/flight-log-2026/2027/) · [Same log on claude.ai](https://claude.ai/artifact/497wzrDRcKR2U392kgTHh4) · [Global strategy report](https://roamfolio.github.io/flight-log-2026/business/global-strategy.html) · [Marketing analytics plan](https://roamfolio.github.io/flight-log-2026/business/marketing-analytics.html)
 **Live status:** the web pages (`index.html`, `story.html`) mark each flight "flown" only after its landing time passes, and refresh themselves when the next flight lands. The Story pictures are dated Dec 20, 2026 (after the last flight).
+
+**All my flights:** [all/](all/index.html) gathers every year listed in `years.js` (each year's data is `YEAR/flights.js`), with lifetime totals, a map of every route, a recap card per year and a CSV download. It updates twice a day from booking emails.
 
 **Yearly logs:** 2026 is wrapped up (this page). From January, the [2027 flight log](2027/index.html) fills in automatically from new booking emails; see [automation/README.md](automation/README.md).
 
